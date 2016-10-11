@@ -11,5 +11,6 @@
   <plone:api file="api.json" />
 
   <include file="content.zcml" />
+  <include file="services/configure.zcml" />
 
 </configure>

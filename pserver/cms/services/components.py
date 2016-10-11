@@ -5,6 +5,7 @@ from plone.server.interfaces import IRequest
 from plone.server.interfaces import IAbsoluteURL
 from plone.dexterity.interfaces import IDexterityContent
 from plone.server.interfaces import IPloneSite
+from zope.component import queryMultiAdapter
 from plone.server.api.service import TraversableService
 
 
@@ -31,11 +32,10 @@ class ComponentsGET(TraversableService):
         return self
 
     async def __call__(self):
+        obj_url = IAbsoluteURL(self.context, self.request)()
         component = {
-            'id': self.component_id,
-            'data': {
-                'items': self.value()
-            }
+            '@id': obj_url + '/@components/' + self.component_id,
+            'items': self.value()
         }
         return component
 
