@@ -15,21 +15,21 @@ class PserverCMSLayer(PloneBaseLayer):
             "id": "front-page",
             "description": "Description Plone Site"
         }))
-        assert resp.status_code == 200
+        assert resp.status_code == 201
 
         resp = cls.requester('POST', '/plone/plone/', data=json.dumps({
             "@type": "Item",
             "title": "News",
             "id": "news",
         }))
-        assert resp.status_code == 200
+        assert resp.status_code == 201
 
         resp = cls.requester('POST', '/plone/plone/', data=json.dumps({
             "@type": "Item",
             "title": "Events",
             "id": "events",
         }))
-        assert resp.status_code == 200
+        assert resp.status_code == 201
 
 
 class PserverCMSTestCase(unittest.TestCase):
