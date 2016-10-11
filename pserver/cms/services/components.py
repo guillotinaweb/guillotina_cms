@@ -1,10 +1,11 @@
 from zope.component import adapter
 from zope.interface import implementer
-from plone.server.interfaces import IObjectComponent
+from pserver.cms.interfaces import IObjectComponent
 from plone.server.interfaces import IRequest
 from plone.server.interfaces import IAbsoluteURL
 from plone.dexterity.interfaces import IDexterityContent
 from plone.server.interfaces import IPloneSite
+from plone.server.api.service import TraversableService
 
 
 @implementer(IObjectComponent)
