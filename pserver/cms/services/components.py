@@ -66,6 +66,6 @@ class Navigation(Component):
             if IDexterityContent.providedBy(content):
                 result.append({
                     'title': content.__name__,
-                    'url': IAbsoluteURL(content, self.request)(site_url=True)
+                    'url': IAbsoluteURL(content, self.request)()
                 })
         return result

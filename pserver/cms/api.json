@@ -7,6 +7,12 @@
                         "factory": "pserver.cms.services.components.ComponentsGET",
                         "permission": "plone.ViewContent"
                     }
+                },
+                "@login": {
+                    "POST": {
+                        "factory": "pserver.cms.services.login.Login",
+                        "permission": "plone.AccessPreflight"
+                    }
                 }
             }
         }
