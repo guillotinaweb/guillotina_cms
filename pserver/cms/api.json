@@ -13,6 +13,12 @@
                         "factory": "pserver.cms.services.login.Login",
                         "permission": "plone.AccessPreflight"
                     }
+                },
+                "@refresh": {
+                    "POST": {
+                        "factory": "pserver.cms.services.login.Refresh",
+                        "permission": "plone.AccessPreflight"
+                    }
                 }
             }
         }

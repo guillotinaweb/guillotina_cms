@@ -24,6 +24,7 @@ setup(
     install_requires=[
         'setuptools',
         'plone.server',
+        'pyjwt'
     ],
     tests_require=[
         'pytest',
