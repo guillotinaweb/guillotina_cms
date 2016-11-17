@@ -1,6 +1,6 @@
 {
 	"contenttypes": {
-		"plone.dexterity.interfaces.IDexterityContent": {
+		"plone.server.interfaces.IResource": {
             "endpoints": {
                 "@components": {
                     "GET": {

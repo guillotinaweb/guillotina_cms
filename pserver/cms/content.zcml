@@ -14,7 +14,7 @@
     />
 
     <plone:contenttype
-      	portal_type="News"
+      	portal_type="News Item"
       	schema=".content.news.INews"
       	class=".content.news.News"
     />

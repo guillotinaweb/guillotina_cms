@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from plone.server.addons import Addon
-from plone.server.registry import ILayers
+from plone.server.config import ILayers
 
 CMS_LAYER = 'pserver.cms.interfaces.ICMSLayer'
 

@@ -3,14 +3,14 @@ from zope.interface import implementer
 from pserver.cms.interfaces import IObjectComponent
 from plone.server.interfaces import IRequest
 from plone.server.interfaces import IAbsoluteURL
-from plone.dexterity.interfaces import IDexterityContent
+from plone.server.interfaces import IResrouce
 from plone.server.interfaces import IPloneSite
 from zope.component import queryMultiAdapter
 from plone.server.api.service import TraversableService
 
 
 @implementer(IObjectComponent)
-@adapter(IDexterityContent, IRequest)
+@adapter(IResrouce, IRequest)
 class Component(object):
     def __init__(self, context, request):
         self.context = context
@@ -63,7 +63,7 @@ class Navigation(Component):
         result = []
         site = self.request.site
         for content in site.values():
-            if IDexterityContent.providedBy(content):
+            if IResrouce.providedBy(content):
                 result.append({
                     'title': content.__name__,
                     'url': IAbsoluteURL(content, self.request)()
