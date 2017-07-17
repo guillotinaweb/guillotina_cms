@@ -10,23 +10,33 @@ Bundle of cms functionality for guillotina
 Bootstrap dev
 -------------
 
+docker-compose create
+git submodule init pastanaga
+git submodule init plone-react
+git submodule update pastanaga
+git submodule update plone-react
 docker-compose start postgres
 
 Compile Pastanaga
 -----------------
 
-cd pastanaga
-yarn install
-npm run build
-cd ..
+Using yarn::
+
+    cd pastanaga
+    yarn install
+    npm run build
+    cd ..
 
 Compile Plone React
 -------------------
 
-cd plone-react
-yarn install
-npm run build
-cd ..
+Using yarn::
+
+    cd plone-react
+    yarn install
+    npm run build
+    cd ..
+
 
 Run dev
 -------
