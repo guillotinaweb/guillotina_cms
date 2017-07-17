@@ -1,0 +1,6 @@
+[submodule "pastanaga"]
+	path = pastanaga
+	url = git@github.com:plone/pastanaga
+[submodule "plone-react"]
+	path = plone-react
+	url = git@github.com:plone/plone-react.git

@@ -1,7 +1,0 @@
-<configure xmlns="http://namespaces.zope.org/zope"
-           xmlns:plone="http://namespaces.plone.org/plone">
-
-  <adapter factory="pserver.cms.services.components.Breadcrumbs" name="breadcrumbs" />
-  <adapter factory="pserver.cms.services.components.Navigation" name="navigation" />
-
-</configure>

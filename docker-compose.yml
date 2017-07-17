@@ -1,0 +1,21 @@
+version: '3'
+services:
+  guillotina:
+    build: .
+    ports:
+    - "8080:8080"
+    volumes:
+    - .:/usr/src/app
+    - logvolume01:/var/log
+    links:
+    - postgres
+  postgres:
+    image: postgres
+    environment:
+        POSTGRES_PASSWORD: secret
+        POSTGRES_INITDB_ARGS: --data-checksums
+    volumes:
+    - postgres_data_cms:/var/lib/postgresql/data
+volumes:
+  logvolume01: {}
+  postgres_data_cms: {}

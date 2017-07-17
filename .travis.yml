@@ -1,0 +1,25 @@
+# we want to make sure it is run on trusty where sudo is provided for postgres
+dist: trusty
+language: python
+python: 3.6-dev
+sudo: required
+
+services:
+  - postgresql
+# make sure we're on the latest version of postgresql
+addons:
+  postgresql: "9.6"
+before_script:
+  - psql -c 'create database guillotina;' -U postgres
+
+cache:
+  directories:
+    - eggs
+install:
+  - python bootstrap-buildout.py
+  - bin/buildout -t 3
+script:
+  - bin/py.test -s --cov=guillotina_elasticsearch -v --cov-report term-missing guillotina_elasticsearch
+after_success:
+  - pip install coveralls
+  - coveralls
