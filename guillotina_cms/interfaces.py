@@ -11,3 +11,7 @@ class ICMSLayer(Interface):
 
 class IObjectComponent(Interface):
     pass
+
+
+class IObjectWorkflow(Interface):
+    pass

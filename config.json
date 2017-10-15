@@ -23,7 +23,8 @@
         "password": "root"
     },
     "auth_token_validators": [
-        "guillotina.auth.validators.SaltedHashPasswordValidator"
+        "guillotina.auth.validators.SaltedHashPasswordValidator",
+        "guillotina_cms.validator.CMSJWTValidator"
     ],
     "jwt": {
         "secret": "secret",

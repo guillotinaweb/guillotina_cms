@@ -41,4 +41,4 @@ Using yarn::
 Run dev
 -------
 
-docker-compose up guillotina
+docker-compose run --service-ports guillotina

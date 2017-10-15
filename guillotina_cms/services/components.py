@@ -1,25 +1,26 @@
-from zope.component import adapter
-from zope.interface import implementer
-from pserver.cms.interfaces import IObjectComponent
-from plone.server.interfaces import IRequest
-from plone.server.interfaces import IAbsoluteURL
-from plone.server.interfaces import IResrouce
-from plone.server.interfaces import IPloneSite
-from zope.component import queryMultiAdapter
-from plone.server.api.service import TraversableService
+from guillotina_cms.interfaces import IObjectComponent
+from guillotina import configure
+from guillotina.interfaces import IRequest
+from guillotina.interfaces import IAbsoluteURL
+from guillotina.interfaces import IResource
+from guillotina.interfaces import IDatabase
+from guillotina.component import queryMultiAdapter
+from guillotina.api.service import TraversableService
 
 
-@implementer(IObjectComponent)
-@adapter(IResrouce, IRequest)
 class Component(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
 
 
+@configure.service(
+    context=IResource, method='GET',
+    permission='guillotina.AccessContent', name='@components',
+    summary='Components for a resource')
 class ComponentsGET(TraversableService):
 
-    def publishTraverse(self, traverse):
+    async def publish_traverse(self, traverse):
         if len(traverse) == 1:
             # we want have the key of the registry
             self.value = queryMultiAdapter(
@@ -35,37 +36,43 @@ class ComponentsGET(TraversableService):
         obj_url = IAbsoluteURL(self.context, self.request)()
         component = {
             '@id': obj_url + '/@components/' + self.component_id,
-            'items': self.value()
+            'items': await self.value()
         }
         return component
 
 
+@configure.adapter(
+    for_=(IResource, IRequest),
+    provides=IObjectComponent,
+    name='breadcrumbs')
 class Breadcrumbs(Component):
 
-    def __call__(self):
+    async def __call__(self):
         result = []
         context = self.context
-        while context:
+        while context is not None and not IDatabase.providedBy(context):
             result.append({
-                'title': context.__name__,
-                'url': IAbsoluteURL(context, self.request)(site_url=True)
+                'title': context.title,
+                'url': IAbsoluteURL(context, self.request)()
             })
             context = getattr(context, '__parent__', None)
-            if IPloneSite.providedBy(context):
-                context = None
         result.reverse()
         return result
 
 
+@configure.adapter(
+    for_=(IResource, IRequest),
+    provides=IObjectComponent,
+    name='navigation')
 class Navigation(Component):
 
-    def __call__(self):
+    async def __call__(self):
         result = []
-        site = self.request.site
-        for content in site.values():
-            if IResrouce.providedBy(content):
+        container = self.request.container
+        async for content in container.async_values():
+            if IResource.providedBy(content):
                 result.append({
-                    'title': content.__name__,
+                    'title': content.title,
                     'url': IAbsoluteURL(content, self.request)()
                 })
         return result

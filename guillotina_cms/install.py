@@ -5,9 +5,10 @@ from guillotina import configure
 
 CMS_LAYER = 'guillotina_cms.interfaces.ICMSLayer'
 
+
 @configure.addon(
-    name='canonical',
-    title='Atlasense Canonical API')
+    name='cms',
+    title='Guillotina CMS')
 class CMSAddon(Addon):
 
     @classmethod

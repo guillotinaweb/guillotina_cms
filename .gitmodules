@@ -4,3 +4,6 @@
 [submodule "plone-react"]
 	path = plone-react
 	url = git@github.com:plone/plone-react.git
+[submodule "plone-angular-demo"]
+	path = plone-angular-demo
+	url = git@github.com:collective/plone-angular-demo.git

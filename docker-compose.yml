@@ -4,6 +4,7 @@ services:
     build: .
     ports:
     - "8080:8080"
+    - "50101:50101"
     volumes:
     - .:/usr/src/app
     - logvolume01:/var/log

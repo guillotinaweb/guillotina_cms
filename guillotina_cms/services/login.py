@@ -1,19 +1,23 @@
 # -*- encoding: utf-8 -*-
-from plone.server.api.service import Service
+from guillotina.api.service import Service
 from datetime import datetime, timedelta
 import jwt
 from aiohttp.web import Response
-from plone.server.interfaces import IDownloadView
+from guillotina.interfaces import IDownloadView
 from zope.interface import alsoProvides
+from guillotina import configure
+from guillotina.interfaces import IContainer
 
 SECRET = 'secret'
 
 
+@configure.service(
+    context=IContainer, method='POST',
+    permission='guillotina.AccessContent', name='@login',
+    summary='Components for a resource')
 class Login(Service):
 
-    def __init__(self, context, request):
-        super(Login, self).__init__(context, request)
-        alsoProvides(self, IDownloadView)
+    __allow_access__ = True
 
     async def __call__(self):
         ttl = 3660
@@ -21,13 +25,20 @@ class Login(Service):
             {
                 'iat': datetime.utcnow(),
                 'exp': datetime.utcnow() + timedelta(seconds=ttl),
-                'token': 'YWRtaW4='
+                'fullname': 'root',
+                'sub': 'root'
             },
             SECRET,
             algorithm='HS256')
-        return Response(body=token)
+        return {
+            'token': token.decode('utf-8')
+        }
 
 
+@configure.service(
+    context=IContainer, method='POST',
+    permission='guillotina.AccessContent', name='@refresh',
+    summary='Components for a resource')
 class Refresh(Service):
 
     def __init__(self, context, request):
