@@ -3,7 +3,7 @@
         "client_max_size": 20971520
     },
     "databases": [{
-      "rel0": {
+      "db": {
         "storage": "postgresql",
         "dsn": "postgres://postgres:secret@postgres:5432/postgres",
         "options": {
@@ -17,6 +17,7 @@
         {"favicon.png": "static/favicon.png"},
         {"swagger_static": "guillotina_swagger:static"},
         {"pastanaga": "pastanaga"},
+        {"ng": "plone-angular-demo/dist"},
         {"plone": "plone-react"}
     ],
     "root_user": {

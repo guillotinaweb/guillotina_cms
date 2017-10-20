@@ -27,14 +27,16 @@ Using yarn::
     npm run build
     cd ..
 
-Compile Plone React
+
+
+Compile Angular SDK
 -------------------
 
 Using yarn::
 
-    cd plone-react
+    cd plone-angular-demo
     yarn install
-    npm run build
+    ng build --base-href /ng/
     cd ..
 
 
@@ -42,3 +44,15 @@ Run dev
 -------
 
 docker-compose run --service-ports guillotina
+
+
+Running Plone React
+-------------------
+
+Using yarn on a new terminal::
+
+    cd plone-react
+    yarn install
+    npm run dev
+
+    access http://localhost:4300
