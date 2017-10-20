@@ -34,10 +34,10 @@ class ComponentsGET(TraversableService):
 
     async def __call__(self):
         obj_url = IAbsoluteURL(self.context, self.request)()
-        component = {
+        component = [{
             '@id': obj_url + '/@components/' + self.component_id,
             'items': await self.value()
-        }
+        }]
         return component
 
 
