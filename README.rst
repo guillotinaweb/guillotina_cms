@@ -11,10 +11,8 @@ Bootstrap dev
 -------------
 
 docker-compose create
-git submodule init pastanaga
-git submodule init plone-react
-git submodule update pastanaga
-git submodule update plone-react
+git submodule init
+git submodule update
 docker-compose start postgres
 
 Compile Pastanaga

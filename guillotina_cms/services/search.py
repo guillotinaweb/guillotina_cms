@@ -15,4 +15,6 @@ class Search(Service):
     __allow_access__ = True
 
     async def __call__(self):
-    	return []
+        return {
+            "items": []
+        }
