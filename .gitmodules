@@ -7,3 +7,6 @@
 [submodule "plone-angular-demo"]
 	path = plone-angular-demo
 	url = git@github.com:collective/plone-angular-demo.git
+[submodule "pastanaga-angular"]
+	path = pastanaga-angular
+	url = git@github.com:plone/pastanaga-angular.git

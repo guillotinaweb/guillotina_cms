@@ -20,9 +20,9 @@ Compile Pastanaga
 
 Using yarn::
 
-    cd pastanaga
+    cd pastanaga-angular
     yarn install
-    npm run build
+    ng build --base-href /pastanage/
     cd ..
 
 
