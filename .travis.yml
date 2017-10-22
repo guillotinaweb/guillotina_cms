@@ -19,9 +19,10 @@ cache:
 install:
   - pip install flake8
   - pip install coverage==4.0.3
+  - pip install pytest
   - python setup.py develop
 script:
-  - bin/py.test -s --cov=guillotina_cms -v --cov-report term-missing guillotina_cms
+  - pytest -s --cov=guillotina_cms -v --cov-report term-missing guillotina_cms
 after_success:
   - pip install coveralls
   - coveralls
