@@ -11,7 +11,7 @@
         }
       }
     }],
-    "applications": ["guillotina_swagger", "guillotina_cms"],
+    "applications": ["guillotina_swagger", "guillotina_cms", "guillotina_elasticsearch"],
     "address": 8080,
     "static": [
         {"favicon.png": "static/favicon.png"},
