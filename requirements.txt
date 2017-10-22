@@ -1,3 +1,4 @@
 guillotina
 guillotina_dbusers
+guillotina_elasticsearch
 guillotina_swagger

@@ -6,6 +6,7 @@ sudo: required
 
 services:
   - postgresql
+  - docker
 # make sure we're on the latest version of postgresql
 addons:
   postgresql: "9.6"
@@ -16,10 +17,16 @@ cache:
   directories:
     - eggs
 install:
-  - python bootstrap-buildout.py
-  - bin/buildout -t 3
+  - pip install flake8
+  - pip install coverage==4.0.3
+  - python setup.py develop
 script:
-  - bin/py.test -s --cov=guillotina_elasticsearch -v --cov-report term-missing guillotina_elasticsearch
+  - bin/py.test -s --cov=guillotina_cms -v --cov-report term-missing guillotina_cms
 after_success:
   - pip install coveralls
   - coveralls
+  - docker build -t plone/guillotina_cms .
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push plone/guillotina_cms;
+    fi

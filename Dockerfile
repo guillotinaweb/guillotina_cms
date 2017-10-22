@@ -12,4 +12,4 @@ COPY . .
 
 RUN python setup.py develop
 
-CMD [ "guillotina", "--monitor", "--profile", "--profile-output=/usr/src/app/kk.output" ]
+CMD [ "guillotina" ]
