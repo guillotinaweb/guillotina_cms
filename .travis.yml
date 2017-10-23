@@ -19,8 +19,8 @@ cache:
 install:
   - pip install flake8
   - pip install coverage==4.0.3
-  - pip install guillotina[test]
   - pip install -r requirements.txt
+  - pip install -r requirements-test.txt
   - python setup.py develop
 script:
   - pytest -s --cov=guillotina_cms -v --cov-report term-missing guillotina_cms
