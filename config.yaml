@@ -1,0 +1,58 @@
+---
+aiohttp_settings:
+  client_max_size: 20971520
+databases:
+- db:
+    storage: postgresql
+    dsn: postgres://postgres:secret@postgres:5432/postgres
+    options:
+      read_only: false
+applications:
+- guillotina_swagger
+- guillotina_cms
+- guillotina_elasticsearch
+address: 8080
+static:
+- favicon.png: static/favicon.png
+- swagger_static: guillotina_swagger:static
+- pastanaga: pastanaga-angular/dist
+- ng: plone-angular-demo/dist
+- plone: plone-react
+root_user:
+  password: root
+auth_token_validators:
+- guillotina.auth.validators.SaltedHashPasswordValidator
+- guillotina_cms.validator.CMSJWTValidator
+jwt:
+  secret: secret
+  algorithm: HS256
+cors:
+  allow_origin:
+  - "*"
+  allow_methods:
+  - GET
+  - POST
+  - DELETE
+  - HEAD
+  - PATCH
+  - OPTIONS
+  allow_headers:
+  - "*"
+  expose_headers:
+  - "*"
+  allow_credentials: true
+  max_age: 3660
+elasticsearch:
+  bulk_size: 20
+  index_name_prefix: plone-
+  connection_settings:
+    endpoints:
+    - http://elasticsearch.canonical.svc.cluster.local:9200
+    sniffer_timeout: 0.5
+  index: {}
+  mapping_overrides:
+    "*": {}
+utilities:
+- provides: guillotina.async.IQueueUtility
+  factory: guillotina.async.QueueUtility
+  settings: {}
