@@ -1,13 +1,8 @@
-# -*- coding: utf-8 -*-
-from pserver.cms.testing import PserverCMSTestCase
+import asyncio
+from guillotina_cms.tests.utils import add_content
 
 
-class TestContent(PserverCMSTestCase):
-
-    def test_content(self):
-        self.assertEqual(
-            self.layer.portal['news'].portal_type, 'Item')
-        self.assertEqual(
-            self.layer.portal['front-page'].portal_type, 'Document')
-        self.assertEqual(
-            self.layer.portal['events'].portal_type, 'Item')
+async def test_basic_content(cms_requester):
+    async with await cms_requester as requester:
+        await add_content(requester)
+        await asyncio.sleep(1)
