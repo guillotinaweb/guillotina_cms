@@ -1,3 +1,6 @@
+import json
+import asyncio
+
 async def add_content(requester, num_folders=10, num_items=10, base_id='cms-'):
     path = '/db/guillotina/'
     created = 0
