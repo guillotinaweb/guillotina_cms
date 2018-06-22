@@ -7,36 +7,6 @@ WIP: This package is a work in progress to provide CMS on guillotina
 
 Bundle of cms functionality for guillotina
 
-Bootstrap dev
--------------
-
-docker-compose create
-git submodule init
-git submodule update
-
-
-Compile Pastanaga
------------------
-
-Using yarn::
-
-    cd pastanaga-angular
-    yarn install
-    ng build --base-href /pastanage/
-    cd ..
-
-
-
-Compile Angular SDK
--------------------
-
-Using yarn::
-
-    cd plone-angular-demo
-    yarn install
-    ng build --base-href /ng/
-    cd ..
-
 Prepare Docker env
 ------------------
 
@@ -50,9 +20,9 @@ Start Docker Background
 -----------------------
 
     docker-compose create
-    docker-compose start cockroachdb
-    docker-compose start cockroachdb2
-    docker-compose start elasticsearch
+    docker-compose up cockroachdb
+    docker-compose up cockroachdb2
+    docker-compose up elasticsearch
     docker exec -it guillotina_cms_cockroachdb_1 /cockroach/cockroach sql --insecure --execute="CREATE DATABASE guillotina;"
 
 Run dev
@@ -76,6 +46,7 @@ Using yarn on a new terminal::
 
     cd plone-react
     yarn install
-    npm run dev
+    ( edit src/config.py to point http://localhost:8081/db/web )
+    yarn dev
 
     access http://localhost:4300

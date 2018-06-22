@@ -34,7 +34,7 @@ class Login(Service):
 
 @configure.service(
     context=IContainer, method='POST',
-    permission='guillotina.AccessContent', name='@refresh',
+    permission='guillotina.AccessContent', name='@login-renew',
     summary='Components for a resource')
 class Refresh(DownloadService):
 

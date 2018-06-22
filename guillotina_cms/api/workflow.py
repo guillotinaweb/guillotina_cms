@@ -16,7 +16,7 @@ class Workflow(object):
 
 @configure.service(
     context=IResource, method='GET',
-    permission='guillotina.AccessContent', name='@workflow/{workflow_id}',
+    permission='guillotina.AccessContent', name='@workflow',
     summary='Workflows for a resource',
     responses={
         "200": {
@@ -27,17 +27,6 @@ class Workflow(object):
         }
     })
 class WorkflowGET(Service):
-
-    async def prepare(self):
-        self.workflow_id = self.request.matchdict['workflow_id']
-        self.value = queryMultiAdapter(
-                (self.context, self.request),
-                IObjectWorkflow, name=self.workflow_id)
-        if self.value is None:
-            raise HTTPNotFound(content={
-                'reason': f'Could not find workflow {self.workflow_id}',
-                'type': self.workflow_id
-            })
 
     async def __call__(self):
         if not hasattr(self, 'value'):

@@ -1,4 +1,4 @@
-guillotina
+guillotina>=4.0.2
 guillotina_dbusers
 guillotina_elasticsearch
 guillotina_swagger

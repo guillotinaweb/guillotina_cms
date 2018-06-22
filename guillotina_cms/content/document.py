@@ -2,7 +2,7 @@
 from guillotina import configure
 from guillotina.content import Folder
 from guillotina.interfaces import IFolder
-from guillotina import schema
+from guillotina_cms.fields.richtext import RichTextField
 from guillotina_cms import _
 from guillotina.directives import index
 
@@ -10,9 +10,10 @@ from guillotina.directives import index
 class IDocument(IFolder):
 
     index('text', type='text')
-    text = schema.Text(
+    text = RichTextField(
         title=_('Text'),
-        required=False)
+        required=False,
+        widget='richtext')
 
 
 @configure.contenttype(
