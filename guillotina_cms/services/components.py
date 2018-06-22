@@ -5,7 +5,8 @@ from guillotina.interfaces import IAbsoluteURL
 from guillotina.interfaces import IResource
 from guillotina.interfaces import IDatabase
 from guillotina.component import queryMultiAdapter
-from guillotina.api.service import TraversableService
+from guillotina.api.service import Service
+from guillotina.response import HTTPNotFound
 
 
 class Component(object):
@@ -16,21 +17,28 @@ class Component(object):
 
 @configure.service(
     context=IResource, method='GET',
-    permission='guillotina.AccessContent', name='@components',
-    summary='Components for a resource')
-class ComponentsGET(TraversableService):
+    permission='guillotina.AccessContent', name='@components/{component_id}',
+    summary='Components for a resource',
+    responses={
+        "200": {
+            "description": "Result results on components",
+            "schema": {
+                "properties": {}
+            }
+        }
+    })
+class ComponentsGET(Service):
 
-    async def publish_traverse(self, traverse):
-        if len(traverse) == 1:
-            # we want have the key of the registry
-            self.value = queryMultiAdapter(
-                (self.context, self.request),
-                IObjectComponent, name=traverse[0])
-            self.component_id = traverse[0]
-        else:
-            self.value = None
-            self.component_id = None
-        return self
+    async def prepare(self):
+        self.component_id = self.request.matchdict['component_id']
+        self.value = queryMultiAdapter(
+            (self.context, self.request),
+            IObjectComponent, name=self.component_ids)
+        if self.value is None:
+            raise HTTPNotFound(content={
+                'reason': f'Could not find component {self.component_id}',
+                'component': self.component_id
+            })
 
     async def __call__(self):
         obj_url = IAbsoluteURL(self.context, self.request)()

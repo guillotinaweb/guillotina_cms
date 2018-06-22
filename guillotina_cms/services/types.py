@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from guillotina import configure
-from guillotina.api.service import TraversableService
+from guillotina.api.service import Service
 from guillotina.component import getMultiAdapter
 from guillotina.component import getUtilitiesFor
 from guillotina.component import queryUtility
@@ -8,12 +8,13 @@ from guillotina.interfaces import IResource
 from guillotina.interfaces import IFactorySerializeToJson
 from guillotina.interfaces import IResourceFactory
 from guillotina.interfaces import IAbsoluteURL
+from guillotina.response import HTTPNotFound
 
 
 @configure.service(
     context=IResource, method='GET',
-    permission='guillotina.AccessContent', name='@types',
-    summary='Read information on available types',
+    permission='guillotina.AccessContent', name='@types/{type_id}',
+    summary='Components for a resource',
     responses={
         "200": {
             "description": "Result results on types",
@@ -22,13 +23,16 @@ from guillotina.interfaces import IAbsoluteURL
             }
         }
     })
-class Read(TraversableService):
+class Read(Service):
 
-    async def publish_traverse(self, traverse):
-        if len(traverse) == 1:
-            # we want have the key of the registry
-            self.value = queryUtility(IResourceFactory, name=traverse[0])
-        return self
+    async def prepare(self):
+        type_id = self.request.matchdict['type_id']
+        self.value = queryUtility(IResourceFactory, name=type_id)
+        if self.value is None:
+            raise HTTPNotFound(content={
+                'reason': f'Could not find type {type_id}',
+                'type': type_id
+            })
 
     async def __call__(self):
         if not hasattr(self, 'value'):

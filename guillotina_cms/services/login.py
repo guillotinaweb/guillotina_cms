@@ -3,8 +3,7 @@ from guillotina.api.service import Service
 from datetime import datetime, timedelta
 import jwt
 from aiohttp.web import Response
-from guillotina.interfaces import IDownloadView
-from zope.interface import alsoProvides
+from guillotina.api.service import DownloadService
 from guillotina import configure
 from guillotina.interfaces import IContainer
 
@@ -13,11 +12,9 @@ SECRET = 'secret'
 
 @configure.service(
     context=IContainer, method='POST',
-    permission='guillotina.AccessContent', name='@login',
-    summary='Components for a resource')
+    permission='guillotina.Public', name='@login',
+    summary='Components for a resource', allow_access=True)
 class Login(Service):
-
-    __allow_access__ = True
 
     async def __call__(self):
         ttl = 3660
@@ -39,11 +36,7 @@ class Login(Service):
     context=IContainer, method='POST',
     permission='guillotina.AccessContent', name='@refresh',
     summary='Components for a resource')
-class Refresh(Service):
-
-    def __init__(self, context, request):
-        super(Refresh, self).__init__(context, request)
-        alsoProvides(self, IDownloadView)
+class Refresh(DownloadService):
 
     async def __call__(self):
         ttl = 3660

@@ -3,21 +3,22 @@ aiohttp_settings:
   client_max_size: 20971520
 databases:
 - db:
-    storage: postgresql
-    dsn: postgres://postgres:secret@postgres:5432/postgres
-    options:
-      read_only: false
+    storage: cockroach
+    transaction_strategy: dbresolve_readcommitted
+    dsn: postgresql://root@cockroachdb:26257/guillotina?sslmode=disable
+    read_only: false
+    pool_size: 100
 applications:
 - guillotina_swagger
 - guillotina_cms
 - guillotina_elasticsearch
-address: 8080
+address: 8081
 static:
 - favicon.png: static/favicon.png
 - swagger_static: guillotina_swagger:static
-- pastanaga: pastanaga-angular/dist
-- ng: plone-angular-demo/dist
-- plone: plone-react
+# - pastanaga: pastanaga-angular/dist
+# - ng: plone-angular-demo/dist
+# - plone: plone-react
 root_user:
   password: root
 auth_token_validators:
@@ -47,12 +48,12 @@ elasticsearch:
   index_name_prefix: plone-
   connection_settings:
     endpoints:
-    - http://elasticsearch.canonical.svc.cluster.local:9200
+    - http://elasticsearch:9200
     sniffer_timeout: 0.5
   index: {}
   mapping_overrides:
     "*": {}
 utilities:
-- provides: guillotina.async.IQueueUtility
-  factory: guillotina.async.QueueUtility
+- provides: guillotina.async_util.IQueueUtility
+  factory: guillotina.async_util.QueueUtility
   settings: {}

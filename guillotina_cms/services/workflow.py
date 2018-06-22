@@ -3,9 +3,9 @@ from guillotina import configure
 from guillotina.interfaces import IRequest
 from guillotina.interfaces import IAbsoluteURL
 from guillotina.interfaces import IResource
-from guillotina.interfaces import IDatabase
 from guillotina.component import queryMultiAdapter
-from guillotina.api.service import TraversableService
+from guillotina.api.service import Service
+from guillotina.response import HTTPNotFound
 
 
 class Workflow(object):
@@ -16,21 +16,28 @@ class Workflow(object):
 
 @configure.service(
     context=IResource, method='GET',
-    permission='guillotina.AccessContent', name='@workflow',
-    summary='Workflows for a resource')
-class WorkflowGET(TraversableService):
+    permission='guillotina.AccessContent', name='@workflow/{workflow_id}',
+    summary='Workflows for a resource',
+    responses={
+        "200": {
+            "description": "Result results on workflows",
+            "schema": {
+                "properties": {}
+            }
+        }
+    })
+class WorkflowGET(Service):
 
-    async def publish_traverse(self, traverse):
-        if len(traverse) == 1:
-            # we want have the key of the registry
-            self.value = queryMultiAdapter(
+    async def prepare(self):
+        self.workflow_id = self.request.matchdict['workflow_id']
+        self.value = queryMultiAdapter(
                 (self.context, self.request),
-                IObjectWorkflow, name=traverse[0])
-            self.workflow_id = traverse[0]
-        else:
-            self.value = None
-            self.workflow_id = None
-        return self
+                IObjectWorkflow, name=self.workflow_id)
+        if self.value is None:
+            raise HTTPNotFound(content={
+                'reason': f'Could not find workflow {self.workflow_id}',
+                'type': self.workflow_id
+            })
 
     async def __call__(self):
         if not hasattr(self, 'value'):
