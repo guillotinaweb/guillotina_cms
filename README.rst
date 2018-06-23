@@ -10,7 +10,7 @@ Bundle of cms functionality for guillotina
 Prepare Docker env
 ------------------
 
-MacOS:
+MacOS::
 
     screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty
     sysctl -w vm.max_map_count=262144
@@ -18,6 +18,8 @@ MacOS:
 
 Start Docker Background
 -----------------------
+
+Start it::
 
     docker-compose create
     docker-compose up cockroachdb cockroachdb2 elasticsearch
