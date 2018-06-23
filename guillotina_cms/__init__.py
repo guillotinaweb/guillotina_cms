@@ -10,7 +10,6 @@ def includeme(root):
     configure.scan('guillotina_cms.permissions')
     configure.scan('guillotina_cms.api')
     configure.scan('guillotina_cms.install')
-    configure.scan('guillotina_cms.services')
     configure.scan('guillotina_cms.json')
     configure.scan('guillotina_cms.fields')
     configure.scan('guillotina_cms.content')

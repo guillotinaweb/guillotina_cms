@@ -20,9 +20,7 @@ Start Docker Background
 -----------------------
 
     docker-compose create
-    docker-compose up cockroachdb
-    docker-compose up cockroachdb2
-    docker-compose up elasticsearch
+    docker-compose up cockroachdb cockroachdb2 elasticsearch
     docker exec -it guillotina_cms_cockroachdb_1 /cockroach/cockroach sql --insecure --execute="CREATE DATABASE guillotina;"
 
 Run dev
