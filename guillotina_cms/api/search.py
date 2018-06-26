@@ -24,10 +24,6 @@ from guillotina.utils import get_content_path
         }
     })
 async def search_get(context, request):
-    depth = request.query.get('path.depth')
-    sort_on = request.query.get('sort_on')
-    metadata = request.query.get('metadata_fields')
-    b_size = request.query.get('b_size')
     search = query_utility(ICatalogUtility)
     if search is None:
         return {

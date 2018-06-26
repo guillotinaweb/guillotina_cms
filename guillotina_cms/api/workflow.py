@@ -3,9 +3,27 @@ from guillotina import configure
 from guillotina.interfaces import IRequest
 from guillotina.interfaces import IAbsoluteURL
 from guillotina.interfaces import IResource
-from guillotina.component import queryMultiAdapter
 from guillotina.api.service import Service
-from guillotina.response import HTTPNotFound
+
+# Workflows are defined on the configuration on a JSONField structure
+# {
+#   private:
+#       actions:
+#           publish:
+#               to: public
+#               permission: guillotina.AccessContent
+#   public:
+#       triggers:
+#           setpermission:
+#               roleperm:
+#                   role: guillotina.Member
+#                   perm: guillotina.ViewContent
+#           notify: followers
+#       actions:
+#           retire:
+#               to: private
+#               permission: guillotina.AccessContent
+# }
 
 
 class Workflow(object):
@@ -41,23 +59,3 @@ class WorkflowGET(Service):
                 'items': await self.value()
             }
         return workflow
-
-
-@configure.adapter(
-    for_=(IResource, IRequest),
-    provides=IObjectWorkflow,
-    name='publish')
-class Publish(Workflow):
-
-    async def __call__(self):
-        return None
-
-
-@configure.adapter(
-    for_=(IResource, IRequest),
-    provides=IObjectWorkflow,
-    name='submit')
-class Submit(Workflow):
-
-    async def __call__(self):
-        return None

@@ -3,10 +3,12 @@ from guillotina.interfaces import IAbsoluteURL
 from guillotina.interfaces import IResource
 from guillotina.interfaces import IDatabase
 from guillotina.api.service import Service
+from guillotina_cms.interfaces import ICMSLayer
 
 
 @configure.service(
     context=IResource, method='GET',
+    layer=ICMSLayer,
     permission='guillotina.AccessContent', name='@breadcrumbs',
     summary='Components for a bredcrumbs',
     responses={
