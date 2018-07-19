@@ -1,4 +1,4 @@
-from zope.interace import Interface
+from zope.interface import Interface
 from guillotina.schema import JSONField
 import json
 

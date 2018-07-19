@@ -3,7 +3,6 @@ from guillotina import schema
 from guillotina.directives import index_field
 from guillotina.directives import read_permission
 from guillotina.directives import write_permission
-from guillotina_cms.directives import hidden_field
 
 
 class IMarkerFollowing(Interface):
@@ -11,8 +10,6 @@ class IMarkerFollowing(Interface):
 
 
 class IFollowing(Interface):
-    hidden_field('favorites')
-    hidden_field('favorite')
 
     index_field('favorites', type='keyword', store=True)
 

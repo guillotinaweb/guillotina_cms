@@ -12,7 +12,6 @@ from guillotina.json.serialize_value import json_compatible
 from guillotina.directives import merged_tagged_value_list
 from guillotina.interfaces import ISchemaSerializeToJson
 from guillotina.json.serialize_schema import DefaultSchemaSerializer
-from guillotina_cms.directives import hidden_fields
 from guillotina_cms.interfaces import ICMSLayer
 
 

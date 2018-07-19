@@ -1,4 +1,4 @@
-from guillotina_cms.interfaces import IObjectWorkflow
+# from guillotina_cms.interfaces import IObjectWorkflow
 from guillotina import configure
 from guillotina.interfaces import IRequest
 from guillotina.interfaces import IAbsoluteURL

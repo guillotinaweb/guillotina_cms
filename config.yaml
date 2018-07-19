@@ -59,25 +59,24 @@ utilities:
   settings: {}
 - provides: guillotina_cms.interfaces.IWorkflowUtility
   factory: guillotina_cms.utilities.workflow.WorkflowUtility
-  settings: 
-    workflows:
-      extra:
-        private:
-          actions:
-              publish:
-                  to: public
-                  permission: guillotina.AccessContent
-        public:
-          triggers:
-              setpermission:
-                  roleperm:
-                      role: guillotina.Member
-                      perm: guillotina.ViewContent
-              notify: followers
-          actions:
-              retire:
-                  to: private
-                  permission: guillotina.AccessContent
-    workflow_content:
-      default: basic
-      guillotina_cms.content.Document: basic
+  settings: {}
+workflows:
+  private:
+    actions:
+        publish:
+            to: public
+            check_permission: guillotina.AccessContent
+  public:
+    triggers:
+        set_permission:
+            roleperm:
+                role: guillotina.Member
+                perm: guillotina.ViewContent
+        notify: followers
+    actions:
+        retire:
+            to: private
+            check_permission: guillotina.AccessContent
+workflows_content:
+  default: basic
+  guillotina_cms.content.Document: basic

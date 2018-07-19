@@ -1,4 +1,4 @@
 guillotina>=4.0.2
 guillotina_dbusers
-guillotina_elasticsearch
+guillotina_elasticsearch==3.0.26
 guillotina_swagger

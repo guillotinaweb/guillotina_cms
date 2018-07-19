@@ -1,5 +1,5 @@
-from zope.interface import Interface
+from guillotina.interfaces import IAsyncUtility
 
 
-class IWorkflowUtility(Interface):
+class IWorkflowUtility(IAsyncUtility):
     pass

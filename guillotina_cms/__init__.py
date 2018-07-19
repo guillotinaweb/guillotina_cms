@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from guillotina.i18n import MessageFactory
 from guillotina import configure
+from os import getenv
 import logging
 
 _ = MessageFactory('guillotina_cms')
@@ -48,7 +49,5 @@ if sentry_dsn:
 
     logger = logging.getLogger(logger_name)
     handler = handler_factory()
-    if getenv("LOG_LEVEL"):
-        logger.setLevel(getenv("CANONICAL_LOG_LEVEL"))  # type: ignore
-        logger.setLevel(config['level'])
+    logger.setLevel(config['level'])
     logger.addHandler(handler)

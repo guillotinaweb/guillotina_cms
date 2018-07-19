@@ -12,8 +12,8 @@ class ICMSBehavior(Interface):
         title='Should be hidden on navigation',
         default=False)
 
-    language = schema.Choice(
-        title='Language')
+    # language = schema.Choice(
+    #     title='Language')
 
-    review_state = schema.Choice(
-        title='Workflow review state')
+    # review_state = schema.Choice(
+    #     title='Workflow review state')
