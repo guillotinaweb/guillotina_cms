@@ -1,6 +1,5 @@
 # from guillotina_cms.interfaces import IObjectWorkflow
 from guillotina import configure
-from guillotina.interfaces import IRequest
 from guillotina.interfaces import IAbsoluteURL
 from guillotina.interfaces import IResource
 from guillotina.api.service import Service
