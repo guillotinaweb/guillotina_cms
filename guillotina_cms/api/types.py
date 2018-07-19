@@ -111,12 +111,4 @@ class Read(Service):
             IFactorySerializeToJson)
 
         result = await serializer()
-        hidden = ['uuid', 'type_name', '__behaviors__']
-
-        fields = [x for x in result['properties'].keys() if x not in hidden]
-        result['fieldsets'] = [{
-            'fields': fields,
-            'id': 'default',
-            'title': 'Title'
-        }]
         return result
