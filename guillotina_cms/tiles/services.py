@@ -1,13 +1,13 @@
 
+from os.path import join
 
-
+from guillotina import app_settings
 from guillotina import configure
-from guillotina._settings import app_settings
 from guillotina.interfaces import IAbsoluteURL
+from guillotina.interfaces import IContainer
 from guillotina.interfaces import ISchemaSerializeToJson
 from guillotina.response import HTTPNotFound
 from guillotina.utils import resolve_dotted_name
-from os.path import join
 
 
 @configure.service(
@@ -25,12 +25,11 @@ async def get_tiles(context, request):
     result = []
     for key, item in app_settings['available_tiles'].items():
         result.append({
-            "@id": IAbsoluteURL(context) + join("@tiles" , item["name"]),
+            "@id": IAbsoluteURL(context) + join("@tiles", item["name"]),
             "title": item['title'],
             "description": item['"description']
-            })
+        })
     return result
-
 
 
 @configure.service(
@@ -50,5 +49,4 @@ async def get_tile_schema(context, request):
         return HTTPNotFound()
     tile = app_settings['available_tiles'][key]
     schema = resolve_dotted_name(tile['schema'])
-    return ISchemaSerializeToJson(shcema)
-
+    return ISchemaSerializeToJson(schema)

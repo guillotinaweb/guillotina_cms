@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
 from zope.interface import Interface
-from zope.interface import IInterface
 from guillotina.schema.interfaces import IObject
 from guillotina import schema
 
@@ -54,6 +52,6 @@ class ITileType(Interface):
         description=u'Describes configurable data for this tile and allows a '
                     u'form to be rendered to edit it. Set to None if the tile '
                     u'has no configurable schema',
-        schema=IInterface,
+        schema=Interface,
         required=False,
     )

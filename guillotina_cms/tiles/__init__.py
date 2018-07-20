@@ -1,7 +1,12 @@
 
 
-# from guillotina.configure import _base_decorator
+from guillotina.configure import _base_decorator
 from guillotina.configure import register_configuration_handler
+
+from guillotina_cms import app_settings
+from . import services # noqa
+from . import standardtiles  # noqa
+from . import types  # noqa
 
 
 def load_tiletype(_context, tile):
@@ -16,8 +21,9 @@ def load_tiletype(_context, tile):
         'icon': config['icon'],
         'schema': config['schema']
     }
+
 register_configuration_handler('tile', load_tiletype) # noqa
 
 
-# class tilestype(_base_decorator):  # noqa: N801
-#    configuration_type = 'contenttype'
+class tile(_base_decorator):  # noqa: N801
+    configuration_type = 'tile'

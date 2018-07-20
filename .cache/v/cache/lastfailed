@@ -1,0 +1,3 @@
+{
+  "guillotina_cms/tests/test_tiles.py::test_tiles_endpoint_gives_us_registered_tiles[pyloop]": true
+}
