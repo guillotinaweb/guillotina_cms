@@ -46,7 +46,7 @@ Using yarn on a new terminal::
 
     cd plone-react
     yarn install
-    ( edit src/config.py to point http://localhost:8081/db/web )
+    ( edit src/config.js to point http://localhost:8081/db/web )
     yarn dev
 
     access http://localhost:4300

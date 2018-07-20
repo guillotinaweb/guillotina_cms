@@ -18,14 +18,14 @@ NON_IAT_VERIFY = {
 
 class CMSJWTValidator(object):
 
-    for_validators = ('bearer',)
+    for_validators = ('bearer', 'wstoken')
 
     def __init__(self, request):
         self.request = request
 
     async def validate(self, token):
         """Return the user from the token."""
-        if token.get('type') != 'bearer':
+        if token.get('type') not in ('bearer', 'wstoken'):
             return None
 
         if '.' not in token.get('token', ''):
@@ -52,6 +52,8 @@ class CMSJWTValidator(object):
             user = GuillotinaUser(self.request)
             user.name = validated_jwt['fullname']
             user.id = validated_jwt['sub']
+            if token['type'] == 'wstoken':
+                import pdb; pdb.set_trace()
             return user
 
         except jwt.exceptions.DecodeError:
