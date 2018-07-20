@@ -31,8 +31,7 @@ class IDGenerator(object):
     def __call__(self, data):
 
     	if 'title' in data:
-    		new_title = data['title'].lower()
-    		new_title.replace(' ', '-')
+    		new_title = data['title'].lower().replace(' ', '-')
     		return new_title
     	else:
     		return None

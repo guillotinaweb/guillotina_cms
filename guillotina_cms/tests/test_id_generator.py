@@ -13,4 +13,4 @@ async def test_id_generator(cms_requester):
                 'title': 'Folder 32',
             })
         )
-        assert 'folder 32' in resp['@id']
+        assert 'folder-32' in resp['@id']
