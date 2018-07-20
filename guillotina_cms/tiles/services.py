@@ -3,6 +3,7 @@ from os.path import join
 
 from guillotina import app_settings
 from guillotina import configure
+from guillotina.component import get_multi_adapter
 from guillotina.interfaces import IAbsoluteURL
 from guillotina.interfaces import IContainer
 from guillotina.interfaces import ISchemaSerializeToJson
@@ -49,4 +50,5 @@ async def get_tile_schema(context, request):
         return HTTPNotFound()
     tile = app_settings['available_tiles'][key]
     schema = resolve_dotted_name(tile['schema'])
-    return ISchemaSerializeToJson(schema)
+    serializer = get_multi_adapter((schema, request), ISchemaSerializeToJson)
+    return await serializer()
