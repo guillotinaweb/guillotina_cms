@@ -7,12 +7,30 @@ WIP: This package is a work in progress to provide CMS on guillotina
 
 Bundle of cms functionality for guillotina
 
+Prepare guillotina dev
+----------------------
+
+Git submodule::
+
+    git submodule init
+    git submodule update
+
+Create virtualenv::
+
+    virtualenv .
+    source bin/activate
+    pip install -r guillotina/requirements.txt
+    cd guillotina; python setup.py develop; cd ..
+    pip install -r requirements.txt
+    python setup.py develop
+
+
 Prepare Docker env
 ------------------
 
 MacOS::
 
-    screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty
+    screen ~/Library/Containers/com.docker.docker/Data/vms/0/tty
     sysctl -w vm.max_map_count=262144
     (to exit Ctrl + a + d)
 
