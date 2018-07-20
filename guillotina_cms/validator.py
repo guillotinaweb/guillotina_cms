@@ -52,8 +52,6 @@ class CMSJWTValidator(object):
             user = GuillotinaUser(self.request)
             user.name = validated_jwt['fullname']
             user.id = validated_jwt['sub']
-            if token['type'] == 'wstoken':
-                import pdb; pdb.set_trace()
             return user
 
         except jwt.exceptions.DecodeError:
