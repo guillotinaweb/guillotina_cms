@@ -3,3 +3,4 @@ from . import login  # noqa
 from . import types  # noqa
 from . import workflow  # noqa
 from . import search  # noqa
+from . import ws_edit  # noqa
