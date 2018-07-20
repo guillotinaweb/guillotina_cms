@@ -2,3 +2,8 @@
 .eggs
 __pycache__
 *.egg-info
+bin
+.cache
+lib
+include
+pip-selfcheck.json

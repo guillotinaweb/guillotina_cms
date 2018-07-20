@@ -33,6 +33,11 @@ services:
   #     - esdata2:/usr/share/elasticsearch/data
   #   networks:
   #     - esnet
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
   guillotina:
     build: .
     ports:
