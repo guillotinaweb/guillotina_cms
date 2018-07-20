@@ -2,7 +2,7 @@ from guillotina import configure
 from guillotina import schema
 
 from zope.interface import Interface
-from . import tile
+from guillotina_cms import configure_cms
 
 
 # Titol
@@ -10,14 +10,15 @@ from . import tile
 # Text
 # image
 # video
-tile(
-    name='title', title='title', schema=ITileTitle
+@configure_cms.tile(
+    name='title', title='title'
 )
 class ITileTitle(Interface):
     title = schema.TextLine(required=True)
 
 
-class ITileDescription(Interface)
-    text = schema.TextLine(required=True)
+# class ITileDescription(Interface):
+#     text = schema.TextLine(required=True)
+
 
 

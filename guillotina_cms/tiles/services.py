@@ -25,9 +25,9 @@ async def get_tiles(context, request):
     result = []
     for key, item in app_settings['available_tiles'].items():
         result.append({
-            "@id": IAbsoluteURL(context) + join("@tiles", item["name"]),
+            "@id":  join(IAbsoluteURL(context)(), "@tiles", item["name"]),
             "title": item['title'],
-            "description": item['"description']
+            "description": item['description']
         })
     return result
 
