@@ -67,4 +67,5 @@ async def test_storing_tiles_behavior_data(cms_requester):
         assert 'guillotina_cms.tiles.behaviors.ITiles' in resp
         assert 'tiles_layout' in resp['guillotina_cms.tiles.behaviors.ITiles']
 
-
+        assert 'tiles_layout' in resp
+        assert 'tiles' in resp

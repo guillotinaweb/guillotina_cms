@@ -12,7 +12,6 @@ app_settings = {
 
 
 def includeme(root):
-    configure.scan('guillotina_cms.patch')
     configure.scan('guillotina_cms.permissions')
     configure.scan('guillotina_cms.api')
     configure.scan('guillotina_cms.install')

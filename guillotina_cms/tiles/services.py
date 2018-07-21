@@ -3,12 +3,17 @@ from os.path import join
 
 from guillotina import app_settings
 from guillotina import configure
+from guillotina.interfaces import IResource
 from guillotina.component import get_multi_adapter
 from guillotina.interfaces import IAbsoluteURL
 from guillotina.interfaces import IContainer
 from guillotina.interfaces import ISchemaSerializeToJson
 from guillotina.response import HTTPNotFound
+
 from guillotina.utils import resolve_dotted_name
+
+from guillotina_cms.tiles.behaviors import ITiles
+
 
 
 @configure.service(
@@ -52,3 +57,18 @@ async def get_tile_schema(context, request):
     schema = resolve_dotted_name(tile['schema'])
     serializer = get_multi_adapter((schema, request), ISchemaSerializeToJson)
     return await serializer()
+
+
+@configure.service(
+    context=IResource, method='GET',
+    name="@tiles",
+    permission='guillotina.AccessContent',
+    summary='Get tiles for a content object'
+)
+async def get_tiles_for_content(context, request):
+    data = ITiles(context)
+    await data.load()
+    print(data.tiles_layout)
+    import pdb; pdb.set_trace()
+    return dict(ok=1)
+
