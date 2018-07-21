@@ -8,6 +8,8 @@ from guillotina.interfaces import IAsyncBehavior
 from guillotina.transactions import get_tm
 from guillotina.utils import resolve_dotted_name
 from guillotina.interfaces import IResource
+from guillotina_cms.interfaces import IPubSubUtility
+from guillotina.component import get_utility
 
 import aiohttp
 import asyncio
@@ -91,26 +93,24 @@ class WSEdit(View):
 
         tm = get_tm(self.request)
         await tm.abort(self.request)
+
         try:
             await self.ws.prepare(self.request)
         except ConnectionResetError:
             return {}
 
-        pubsub_klass = resolve_dotted_name(app_settings['pubsub_connector'])
-        channel_name = 'ws-field-edit-{}'.format(
-            self.context._p_oid
-        )
-        self.pubsub = pubsub_klass(channel_name, self.request)
-
-        await self.pubsub.initialize()
-
-        # subscribe to redis channel for this context
-        asyncio.ensure_future(
-            self.pubsub.subscribe(self.subscriber_callback))
-
-        self.configure_auto_save()
-
         try:
+            self.pubsub = get_utility(IPubSubUtility)
+            self.channel_name = 'ws-field-edit-{}'.format(
+                self.context._p_oid
+            )
+
+            # subscribe to redis channel for this context
+            asyncio.ensure_future(
+                self.pubsub.subscribe(self.channel_name, self.request.uid, self.subscriber_callback))
+
+            self.configure_auto_save()
+
             async for msg in self.ws:
                 if msg.type == aiohttp.WSMsgType.text:
                     await self.handle_message(msg)
@@ -118,9 +118,11 @@ class WSEdit(View):
                     logger.debug('resource ws connection closed with exception {0:s}'
                                  .format(self.ws.exception()))
         except asyncio.CancelledError:
+            logger.debug('browser closed')
             pass
         finally:
             try:
+                await self.pubsub.unsubscribe(self.channel_name, self.request.uid)
                 await self.ws.close()  # make sure to close socket
             except:
                 pass
@@ -175,7 +177,9 @@ class WSEdit(View):
                 self.ws.send_str(json.dumps({
                     't': 'saved'
                 }))
-                await self.pubsub.publish({
+                await self.pubsub.publish(
+                    self.channel_name,
+                    {
                     't': 'saved',
                     'ruid': self.request.uid
                 })
@@ -185,7 +189,7 @@ class WSEdit(View):
             else:
                 # all other operations are just passed through.
                 data['ruid'] = self.request.uid
-                await self.pubsub.publish(data)
+                await self.pubsub.publish(self.channel_name, data)
 
     async def get_field(self, field_name):
         context = self.context
@@ -268,4 +272,4 @@ class WSEdit(View):
         self.data[field_name] = value
 
         data['ruid'] = self.request.uid
-        await self.pubsub.publish(data)
+        await self.pubsub.publish(self.channel_name, data)
