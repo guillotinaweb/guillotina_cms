@@ -14,6 +14,7 @@ import asyncio
 import json
 import logging
 
+logger = logging.getLogger('guillotina_cms')
 
 dmp = diff_match_patch()
 
