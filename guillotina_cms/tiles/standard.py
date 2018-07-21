@@ -12,12 +12,43 @@ class ITileTitle(Interface):
     title = schema.TextLine(required=True)
 
 
-# class ITileDescription(Interface):
-#     text = schema.TextLine(required=True)
-# Titol
-# Descripcio
-# Text
-# image
-# video
+@configure_cms.tile(
+    name='description', title='Description'
+)
+class ITileDescription(Interface):
+    description = schema.TextLine(required=True)
+
+
+TEXT_SCHEMA = json.dumps({
+	'type': 'object',
+	'properties': {
+		'content-type': {'type': 'string'},
+		'text': {'type': 'string'},
+		'data': {'type': 'string'}
+	}
+})
+
+@configure_cms.tile(
+    name='text', title='Text'
+)
+class ITileText(Interface):
+    text = JSONField(
+    	schema=TEXT_SCHEMA
+    ) 
+    description = schema.TextLine()
+
+
+@configure_cms.tile(
+	name='image', title='Image'
+)
+class ITileImage(Interface):
+	url = schema.TextLine()
+
+
+@configure_cms.tile(
+	name='video', tile='Video'
+)
+class ITileVideo(Interface):
+	url = schema.TextLine()
 
 
