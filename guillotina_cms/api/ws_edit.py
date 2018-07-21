@@ -96,7 +96,7 @@ class WSEdit(View):
         channel_name = 'ws-field-edit-{}'.format(
             self.context._p_oid
         )
-        self.pubsub = pubsub_klass(channel_name)
+        self.pubsub = pubsub_klass(channel_name, self.request)
 
         await self.pubsub.initialize()
 
