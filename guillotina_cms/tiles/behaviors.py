@@ -2,7 +2,9 @@ from guillotina import configure
 from guillotina.behaviors.instance import AnnotationBehavior
 from zope.interface import Interface
 from guillotina.schema import JSONField
+
 import json
+
 
 LAYOUT_SCHEMA = json.dumps({
     'type': 'object',
@@ -19,24 +21,20 @@ DATA_SCHEMA = json.dumps({
 })
 
 
-class IBlocksMarker(Interface):
-    """Marker interface for content with blocks."""
-
-
-class IBlocks(Interface):
-    layout = JSONField(
+class ITiles(Interface):
+    tiles_layout = JSONField(
         title='Layout of the block',
         schema=LAYOUT_SCHEMA)
 
-    blocks = JSONField(
+    tiles = JSONField(
         title='Data of the block',
         schema=DATA_SCHEMA)
 
 
 @configure.behavior(
-    title="Blocks behavior",
-    provides=IBlocks,
-    marker=IBlocksMarker,
+    title="Tiles behavior",
+    provides=ITiles,
     for_="guillotina.interfaces.IResource")
-class Blocks(AnnotationBehavior):
-    pass
+class Tiles(AnnotationBehavior):
+    __annotations_data_key__ = 'itiles'
+    
