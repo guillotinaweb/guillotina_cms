@@ -40,31 +40,44 @@ Start Docker Background
 Start it::
 
     docker-compose create
-    docker-compose up cockroachdb cockroachdb2 elasticsearch
+    docker-compose up cockroachdb cockroachdb2 elasticsearch redis
     docker exec -it guillotina_cms_cockroachdb_1 /cockroach/cockroach sql --insecure --execute="CREATE DATABASE guillotina;"
 
 Run dev
 -------
 
-docker-compose run --service-ports guillotina
+Run docker dev container::
+
+    docker-compose run --service-ports guillotina
 
 
 Add CMS container
 -----------------
 
-curl -X POST --user root:root http://localhost:8081/db -d '{"@type": "Container", "id": "web", "title": "Plone Site"}'
+Add CMS containers::
 
-curl -X POST --user root:root http://localhost:8081/db/web/@addons -d '{"id": "cms"}'
+    curl -X POST --user root:root http://localhost:8081/db -d '{"@type": "Container", "id": "web", "title": "Plone Site"}'
+    curl -X POST --user root:root http://localhost:8081/db/web/@addons -d '{"id": "cms"}'
 
 
-Running Plone React
+Running Plone-React
 -------------------
 
-Using yarn on a new terminal::
+Checkout Plone-React::
+
+    git clone https://github.com/plone/plone-react.githttps://github.com/plone/plone-react.git
+ 
+Install JS package dependencies with Yarn::
 
     cd plone-react
     yarn install
-    ( edit src/config.js to point http://localhost:8081/db/web )
+
+Then edit "src/config.js" to point to http://localhost:8081/db/web.
+
+Start frontend dev server::
+
     yarn dev
 
-    access http://localhost:4300
+Then go to http://localhost:4300 to see the Plone-React frontend running on Guillotina!
+
+You can log into Plone-React with username "root" and password "root".
