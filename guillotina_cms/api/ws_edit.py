@@ -7,7 +7,7 @@ from guillotina.content import get_cached_factory
 from guillotina.interfaces import IAsyncBehavior
 from guillotina.transactions import get_tm
 from guillotina.utils import resolve_dotted_name
-from guillotina.interfaces import IItem
+from guillotina.interfaces import IResource
 
 import aiohttp
 import asyncio
@@ -18,7 +18,7 @@ import logging
 dmp = diff_match_patch()
 
 @configure.service(
-    context=IItem, method='GET',
+    context=IResource, method='GET',
     permission='guillotina.ModifyContent', name='@ws-edit',
     parameters=[{
         "name": "ws_token",
@@ -47,6 +47,17 @@ Socket payload examples:
     }
 
     {
+        "t": "load",
+        "f": "guillotina.behaviors.dublincore.IDublincore.title"
+    }
+
+    {
+        "t": "fdmp",
+        "f": "guillotina.behaviors.dublincore.IDublincore.title",
+        "v": "Hello foo bar"
+    }
+
+    {
         "t": "saved"
     }
 
@@ -55,16 +66,18 @@ Operators:
 In this example, we use `t` and `v` to describe the payload.
 
   - "t": type of operation. `pos`: cursor position update
-  - "f": only used along with dmp
+  - "f": only used along with dmp and fdump
   - "v": the value of the operation
 
 Operator values:
   - dmp: diff-match-patch operation
+  - fdmp: full dump of a field
+  - load: get a field
   - pos: cursor position update
   - save: force saving
   - saved: document saved, reset timer
 
-The only payload we handle is when `t=(dmp|save|saved)`. Otherwise, everything is
+The only payload we handle is when `t=(dmp|fdmp|load|save|saved)`. Otherwise, everything is
 passed along to the other subscribers without interpretation. So if you want to pass
 along editor data in any other way, it would be fine.''',)
 class WSEdit(View):
