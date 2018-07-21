@@ -1,3 +1,4 @@
 [submodule "guillotina"]
 	path = guillotina
-	url = git@github.com:plone/guillotina.git
+	url = git@github.com:plone/guillotina
+	branch = master
