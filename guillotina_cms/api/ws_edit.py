@@ -91,7 +91,10 @@ class WSEdit(View):
 
         tm = get_tm(self.request)
         await tm.abort(self.request)
-        await self.ws.prepare(self.request)
+        try:
+            await self.ws.prepare(self.request)
+        except ConnectionResetError:
+            return {}
 
         pubsub_klass = resolve_dotted_name(app_settings['pubsub_connector'])
         channel_name = 'ws-field-edit-{}'.format(
