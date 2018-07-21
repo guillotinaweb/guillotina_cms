@@ -35,7 +35,7 @@ class RedisPubSubConnector:
                 pass
 
     async def publish(self, data):
-        await self.redis.publish(self.channel, json.dumps(data))
+        await self.redis.publish(self.channel_name, json.dumps(data))
 
 
 class MockPubSubConnector:
