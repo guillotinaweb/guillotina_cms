@@ -79,3 +79,5 @@ Start frontend dev server::
     yarn dev
 
 Then go to http://localhost:4300 to see the Plone-React frontend running on Guillotina!
+
+You can log into Plone-React with username "root" and password "root".
