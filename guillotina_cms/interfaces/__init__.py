@@ -6,3 +6,5 @@ from .workflow import IWorkflowUtility  # noqa
 from .pubsub import IPubSubUtility  # noqa
 from . import blocks  # noqa
 from .base import ICMSLayer  # noqa
+from .tiles import ITiles  # noqa
+from .tiles import ITileType  # noqa

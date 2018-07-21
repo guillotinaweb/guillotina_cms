@@ -8,6 +8,7 @@ _ = MessageFactory('guillotina_cms')
 
 
 app_settings = {
+    'available_tiles': {},
     'pubsub_connector': 'guillotina_cms.pubsub.RedisPubSubConnector',
     'commands': {
         'upgrade': 'guillotina_cms.commands.upgrade.UpgradeCommand'
