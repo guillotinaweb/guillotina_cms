@@ -5,11 +5,14 @@ import asyncio
 import json
 import logging
 
+logger = logging.getLogger('guillotina_cms')
+
 
 class RedisPubSubConnector:
 
-    def __init__(self, channel_name):
+    def __init__(self, channel_name, request):
         self.channel_name = channel_name
+        self.request = request
 
     async def initialize(self):
         pool = await cache.get_redis_pool()
