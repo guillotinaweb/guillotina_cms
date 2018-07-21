@@ -161,7 +161,7 @@ class WSEdit(View):
                 try:
                     await self.apply_edit(data)
                 except Exception:
-                    self.ws.send_str(json.dumps({
+                    await self.ws.send_str(json.dumps({
                         't': 'e',
                         'v': 'Error applying dmp'
                     }))
