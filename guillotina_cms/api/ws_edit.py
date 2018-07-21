@@ -139,7 +139,7 @@ class WSEdit(View):
         if data['t'] == 'saved':
             # reset our auto save counter
             pass
-        self.ws.send_str(json.dumps(data))  # send along to user
+        await self.ws.send_str(json.dumps(data))  # send along to user
 
     async def handle_message(self, msg):
         if msg.data == 'close':
