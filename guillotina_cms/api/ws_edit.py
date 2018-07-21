@@ -108,9 +108,9 @@ class WSEdit(View):
 
         try:
             async for msg in self.ws:
-                if msg.tp == aiohttp.WSMsgType.text:
+                if msg.type == aiohttp.WSMsgType.text:
                     await self.handle_message(msg)
-                elif msg.tp == aiohttp.WSMsgType.error:
+                elif msg.type == aiohttp.WSMsgType.error:
                     logger.debug('resource ws connection closed with exception {0:s}'
                                  .format(self.ws.exception()))
         except asyncio.CancelledError:
