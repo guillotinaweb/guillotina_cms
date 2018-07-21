@@ -46,15 +46,18 @@ Start it::
 Run dev
 -------
 
-docker-compose run --service-ports guillotina
+Run docker dev container::
+
+    docker-compose run --service-ports guillotina
 
 
 Add CMS container
 -----------------
 
-curl -X POST --user root:root http://localhost:8081/db -d '{"@type": "Container", "id": "web", "title": "Plone Site"}'
+Add CMS containers::
 
-curl -X POST --user root:root http://localhost:8081/db/web/@addons -d '{"id": "cms"}'
+    curl -X POST --user root:root http://localhost:8081/db -d '{"@type": "Container", "id": "web", "title": "Plone Site"}'
+    curl -X POST --user root:root http://localhost:8081/db/web/@addons -d '{"id": "cms"}'
 
 
 Running Plone React
