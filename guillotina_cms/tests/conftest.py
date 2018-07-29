@@ -1,6 +1,7 @@
 pytest_plugins = [
-    'guillotina_cms.tests.fixtures',
-    'guillotina_elasticsearch.tests.fixtures',
+    'pytest_docker_fixtures',
     'guillotina.tests.fixtures',
-    'pytest_docker_fixtures'
+    'guillotina_elasticsearch.tests.fixtures',
+    'guillotina_rediscache.tests.fixtures',
+    'guillotina_cms.tests.fixtures'
 ]

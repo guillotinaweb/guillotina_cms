@@ -5,7 +5,7 @@ from guillotina.directives import read_permission
 from guillotina.directives import write_permission
 
 
-class IMarkerFollowing(Interface):
+class IFollowingMarker(Interface):
     """Marker interface for following."""
 
 

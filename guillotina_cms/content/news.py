@@ -5,7 +5,6 @@ from guillotina.interfaces import IItem
 from guillotina import schema
 from guillotina_cms import _
 from guillotina.directives import index
-from guillotina.directives import metadata
 
 
 class INews(IItem):

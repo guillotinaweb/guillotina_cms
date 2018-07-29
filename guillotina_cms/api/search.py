@@ -1,8 +1,12 @@
 from guillotina import configure
+from guillotina import app_settings
 from guillotina.interfaces import IResource
 from guillotina.component import query_utility
 from guillotina.interfaces import ICatalogUtility
-from guillotina.utils import get_content_path
+
+from guillotina.utils import resolve_dotted_name
+from guillotina.utils import get_object_by_oid
+from guillotina.api.content import DefaultGET
 
 
 @configure.service(
@@ -31,16 +35,27 @@ async def search_get(context, request):
             'items': [],
             'items_total': 0
         }
-    result = await search.get_by_path(
-        container=request.container,
-        path=get_content_path(context))
+
+    parser = resolve_dotted_name(app_settings['search_parser'])
+    call_params, full_objects = parser(request, context)()
+
+    import pdb; pdb.set_trace()
+    result = await search.get_by_path(**call_params)
+
     real_result = {
         '@id': request.url.human_repr(),
         'items': [],
         'items_total': result['items_count']
     }
     for member in result['member']:
-        member['@id'] = member['@absolute_url']
-        del member['@absolute_url']
+        if full_objects:
+            obj = get_object_by_oid(member['uuid'])
+
+            view = DefaultGET(obj, request)
+            serialization = await view()
+            real_result['items'].append(serialization)
+        else:
+            member['@id'] = member['@absolute_url']
+            del member['@absolute_url']
     real_result['items'] = result['member']
     return real_result

@@ -1,5 +1,6 @@
 from zope.interface import Interface
 from guillotina import schema
+from guillotina.directives import index
 
 
 class ICMSLayer(Interface):
@@ -8,12 +9,17 @@ class ICMSLayer(Interface):
 
 class ICMSBehavior(Interface):
 
+    index('hidden_navigation', type='boolean')
     hidden_navigation = schema.Bool(
         title='Should be hidden on navigation',
         default=False)
 
-    # language = schema.Choice(
-    #     title='Language')
+    index('language', type='keyword')
+    language = schema.Choice(
+        title='Language',
+        source='languages')
 
-    # review_state = schema.Choice(
-    #     title='Workflow review state')
+    index('review_state', type='keyword')
+    review_state = schema.Choice(
+        title='Workflow review state',
+        source='worklow_states')

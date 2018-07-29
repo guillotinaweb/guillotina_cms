@@ -1,10 +1,11 @@
 import json
 import asyncio
 
-async def add_content(requester, num_folders=10, num_items=10, base_id='cms-'):
-    path = '/db/guillotina/'
+
+async def add_content(requester, num_folders=2, num_items=10, base_id='cms-'):
     created = 0
     for fidx in range(num_folders):
+        path = '/db/guillotina/'
         folder_id = f'{base_id}folder{str(fidx)}'
         resp, status = await requester(
             'POST',
@@ -24,10 +25,16 @@ async def add_content(requester, num_folders=10, num_items=10, base_id='cms-'):
                 path,
                 data=json.dumps({
                     '@type': 'Document',
-                    'title': 'Document' + str(idx)
+                    'title': 'Document' + str(idx),
+                    'text': {
+                        'encoding': 'utf-8',
+                        'content-type': '',
+                        'data': 'This is a long text and needs some extra values'  # noqa
+                    }
                 })
             )
             created += 1
             assert status == 201
+
     await asyncio.sleep(1)  # make sure async index tasks finish
     return created

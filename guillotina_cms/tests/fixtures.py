@@ -21,8 +21,6 @@ def base_settings_configurator(settings):
     else:
         settings['applications'] = ['guillotina_cms']
 
-    settings["utilities"] = []
-
 
 testing.configure_with(base_settings_configurator)
 
@@ -39,15 +37,28 @@ class CMSRequester(ContainerRequesterAsyncContextManager):
         search._conn = None
 
     async def __aenter__(self):
-        try:
-            await super().__aenter__()
-        except:
-            pass
+        await super().__aenter__()
         resp = await self.requester('POST', '/db/guillotina/@addons', data=json.dumps({
             'id': 'cms'
         }))
         return self.requester
 
+
 @pytest.fixture(scope='function')
-async def cms_requester(elasticsearch, guillotina, loop):
+async def cms_requester(elasticsearch, redis_container, guillotina, loop):
+    from guillotina import app_settings
+    app_settings['redis']['port'] = redis_container[1]
+    app_settings['elasticsearch']['connection_settings']['hosts'] = [':'.join(elasticsearch)]
     return CMSRequester(guillotina, loop)
+
+
+@pytest.fixture(scope='function')
+async def pubsub(guillotina, redis_container, loop):
+    util = {
+        'provides': 'guillotina_cms.interfaces.IPubSubUtility',
+        'factory': 'guillotina_cms.utilities.pubsub.PubSubUtility',
+        'settings': {}
+    }
+    guillotina.root.add_async_utility(util, loop=loop)
+    yield
+    guillotina.root.del_async_utility(util)

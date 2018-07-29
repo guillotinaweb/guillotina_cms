@@ -20,6 +20,7 @@ logger = logging.getLogger('guillotina_cms')
 
 dmp = diff_match_patch()
 
+
 @configure.service(
     context=IResource, method='GET',
     permission='guillotina.ModifyContent', name='@ws-edit',
@@ -180,9 +181,9 @@ class WSEdit(View):
                 await self.pubsub.publish(
                     self.channel_name,
                     {
-                    't': 'saved',
-                    'ruid': self.request.uid
-                })
+                        't': 'saved',
+                        'ruid': self.request.uid
+                    })
             elif operation == 'saved':
                 # reset the counter, only one person needs to save it every 30 seconds
                 self.configure_auto_save()

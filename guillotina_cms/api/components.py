@@ -1,6 +1,7 @@
 from guillotina import configure
 from guillotina.interfaces import IAbsoluteURL
 from guillotina.interfaces import IResource
+from guillotina.interfaces import IContainer
 from guillotina.interfaces import IDatabase
 from guillotina.api.service import Service
 from guillotina_cms.interfaces import ICMSLayer

@@ -67,25 +67,26 @@ utilities:
 - provides: guillotina_cms.interfaces.IPubSubUtility
   factory: guillotina_cms.utilities.pubsub.PubSubUtility
   settings: {}
-search_parser:
-  guillotina_cms.search.parser.Parser
+search_parser: guillotina_cms.search.parser.Parser
 workflows:
-  private:
-    actions:
-        publish:
-            to: public
-            check_permission: guillotina.AccessContent
-  public:
-    triggers:
-        set_permission:
-            roleperm:
-                role: guillotina.Member
-                perm: guillotina.ViewContent
-        notify: followers
-    actions:
-        retire:
-            to: private
-            check_permission: guillotina.AccessContent
+  basic:
+    initial_state: private
+    states:
+      private:
+        actions:
+            publish:
+                to: public
+                check_permission: guillotina.AccessContent
+      public:
+        triggers:
+            set_permission:
+                roleperm:
+                    role: guillotina.Member
+                    perm: guillotina.ViewContent
+        actions:
+            retire:
+                to: private
+                check_permission: guillotina.AccessContent
 workflows_content:
-  default: basic
-  guillotina_cms.content.Document: basic
+  guillotina.interfaces.IResource: basic
+  guillotina_cms.content.document.IDocument: basic
