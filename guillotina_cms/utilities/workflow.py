@@ -10,12 +10,12 @@ from guillotina.utils import import_class
 logger = logging.getLogger('guillotina_cms')
 
 
-def create_workflow_factory(name, definition):
+def create_workflow_factory(proto_name, proto_definition):
 
     class Workflow:
 
-        name = name
-        definition = definition
+        name = proto_name
+        definition = proto_definition
 
         def __init__(self, context):
             self.context = context
@@ -32,6 +32,7 @@ def create_workflow_factory(name, definition):
 
         async def switch_state(self, action):
             pass
+    return Workflow
 
 
 @configure.utility(provides=IWorkflowUtility)
@@ -53,10 +54,10 @@ class WorkflowUtility:
         for interface_str, workflow in self.workflows_content.items():
             iface = import_class(interface_str)
             provide_adapter(
-                self.factories[workflow], adapts=iface, provides=IWorkflow,)
+                self.factories[workflow], adapts=(iface,), provides=IWorkflow)
 
     async def finalize(self, app):
-        pass
+        self.factories = {}
 
     def states(self, context):
         return IWorkflow(context).states

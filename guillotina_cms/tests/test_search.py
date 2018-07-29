@@ -31,5 +31,5 @@ async def test_search(cms_requester):
             'GET',
             '/db/guillotina/@search?title__in=Document&portal_type=Document&review_state=private&_aggregations=portal_type+review_state&_size=30'
         )
-        import pdb; pdb.set_trace()
-        assert resp['items_total'] == 20
+        assert resp['aggregations']['type_name'][0]['key'] == 'Document'
+        assert resp['aggregations']['type_name'][0]['doc_count'] == 20

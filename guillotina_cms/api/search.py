@@ -39,7 +39,6 @@ async def search_get(context, request):
     parser = resolve_dotted_name(app_settings['search_parser'])
     call_params, full_objects = parser(request, context)()
 
-    import pdb; pdb.set_trace()
     result = await search.get_by_path(**call_params)
 
     real_result = {
@@ -47,6 +46,7 @@ async def search_get(context, request):
         'items': [],
         'items_total': result['items_count']
     }
+
     for member in result['member']:
         if full_objects:
             obj = get_object_by_oid(member['uuid'])
@@ -57,5 +57,8 @@ async def search_get(context, request):
         else:
             member['@id'] = member['@absolute_url']
             del member['@absolute_url']
+    real_result['aggregations'] = {
+        key: value['buckets'] for key, value in result.get('aggregations', {}).items()
+    }
     real_result['items'] = result['member']
     return real_result

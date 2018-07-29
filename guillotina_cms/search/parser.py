@@ -14,11 +14,12 @@ import logging
 logger = logging.getLogger('guillotina_cms')
 
 INDEXES_CACHE = None
+MAX_AGGS = 20
 
 
 def convert(value):
     # XXX: Check for possible json injection
-    return value.split('+')
+    return value.split(' ')
 
 
 def get_indexes():
@@ -77,6 +78,12 @@ def process_field(field, value, query):
             field = field.rstrip('__wildcard')
 
     if field in indices:
+        if len(value) > 1:
+            term_keyword = 'terms'
+        else:
+            term_keyword = 'term'
+            value = value[0]
+
         _type = indices[field]['type']
         if field == 'portal_type':
             # XXX: Compatibility with plone?
@@ -99,7 +106,7 @@ def process_field(field, value, query):
             # Keyword we expect an exact match
             query['query']['bool']['must'].append(
                 {
-                    'term': {
+                    term_keyword: {
                         field: value
                     }
                 })
@@ -107,7 +114,7 @@ def process_field(field, value, query):
             # Must not be
             query['query']['bool']['must_not'].append(
                 {
-                    'term': {
+                    term_keyword: {
                         field: value
                     }
                 })
@@ -179,6 +186,18 @@ class Parser:
             'sort': []
         }
 
+        if '_aggregations' in get_params:
+            query['aggregations'] = {}
+            for agg in convert(get_params['_aggregations']):
+                if agg == 'portal_type':
+                    # XXX: Compatibility with plone?
+                    agg = 'type_name'
+                query['aggregations'][agg] = {
+                    'terms': {
+                        'field': agg,
+                        'size': MAX_AGGS}
+                }
+            del get_params['_aggregations']
         # Metadata
         if '_metadata' in get_params:
             query['_sources']['includes'] = convert(get_params['_metadata'])
@@ -227,6 +246,6 @@ class Parser:
             del get_params['_size']
 
         for field, value in get_params.items():
-            process_field(field, value, query)
+            process_field(field, convert(value), query)
 
         return call_params, full_objects

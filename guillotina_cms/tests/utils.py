@@ -25,7 +25,7 @@ async def add_content(requester, num_folders=2, num_items=10, base_id='cms-'):
                 path,
                 data=json.dumps({
                     '@type': 'Document',
-                    'title': 'Document' + str(idx),
+                    'title': 'Document ' + str(idx),
                     'text': {
                         'encoding': 'utf-8',
                         'content-type': '',
