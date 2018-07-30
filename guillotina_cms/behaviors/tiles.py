@@ -10,4 +10,3 @@ from guillotina_cms.interfaces import ITiles
     for_="guillotina.interfaces.IResource")
 class Tiles(AnnotationBehavior):
     __annotations_data_key__ = 'itiles'
-    

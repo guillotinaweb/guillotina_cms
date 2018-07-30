@@ -51,9 +51,9 @@ class CMSRequester(ContainerRequesterAsyncContextManager):
 
 @pytest.fixture(scope='function')
 async def cms_requester(elasticsearch, redis_container, guillotina, loop):
-    from guillotina import app_settings
-    app_settings['redis']['port'] = redis_container[1]
-    app_settings['elasticsearch']['connection_settings']['hosts'] = [':'.join(elasticsearch)]
+    # from guillotina import app_settings
+    # app_settings['redis']['port'] = redis_container[1]
+    # app_settings['elasticsearch']['connection_settings']['hosts'] = [':'.join(elasticsearch)]
     return CMSRequester(guillotina, loop)
 
 
