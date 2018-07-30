@@ -1,4 +1,2 @@
-
-
-from . import types
-from . import standard
+from . import types  # noqa
+from . import standard  # noqa

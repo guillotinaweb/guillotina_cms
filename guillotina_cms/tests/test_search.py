@@ -5,6 +5,8 @@ from guillotina_cms.tests.utils import add_content
 async def test_search(cms_requester):
     async with cms_requester as requester:
         total = await add_content(requester)
+        await asyncio.sleep(1)
+        # Make sure ES is fully sync
         # @search?path_starts=folder&depth_gte=2
         resp, status = await requester(
             'GET',

@@ -1,8 +1,8 @@
-
-from guillotina import configure
 from guillotina import schema
 from guillotina_cms import configure_cms
 from zope.interface import Interface
+from guillotina.schema import JSONField
+import json
 
 
 @configure_cms.tile(
@@ -20,35 +20,35 @@ class ITileDescription(Interface):
 
 
 TEXT_SCHEMA = json.dumps({
-	'type': 'object',
-	'properties': {
-		'content-type': {'type': 'string'},
-		'text': {'type': 'string'},
-		'data': {'type': 'string'}
-	}
+    'type': 'object',
+    'properties': {
+        'content-type': {'type': 'string'},
+        'text': {'type': 'string'},
+        'data': {'type': 'string'}
+    }
 })
+
 
 @configure_cms.tile(
     name='text', title='Text'
 )
 class ITileText(Interface):
     text = JSONField(
-    	schema=TEXT_SCHEMA
-    ) 
+        schema=TEXT_SCHEMA
+    )
+
     description = schema.TextLine()
 
 
 @configure_cms.tile(
-	name='image', title='Image'
+    name='image', title='Image'
 )
 class ITileImage(Interface):
-	url = schema.TextLine()
+    url = schema.TextLine()
 
 
 @configure_cms.tile(
-	name='video', tile='Video'
+    name='video', title='Video'
 )
 class ITileVideo(Interface):
-	url = schema.TextLine()
-
-
+    url = schema.TextLine()

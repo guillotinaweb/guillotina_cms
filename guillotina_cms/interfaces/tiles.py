@@ -30,7 +30,6 @@ class ITiles(Interface):
         schema=DATA_SCHEMA)
 
 
-
 class ITileType(Interface):
     """A utility that describes a type of tile
     """

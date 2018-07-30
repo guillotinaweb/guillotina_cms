@@ -3,27 +3,18 @@ from os.path import join
 
 from guillotina import app_settings
 from guillotina import configure
-from guillotina.interfaces import IResource
 from guillotina.component import get_multi_adapter
 from guillotina.interfaces import IAbsoluteURL
 from guillotina.interfaces import IContainer
 from guillotina.interfaces import ISchemaSerializeToJson
 from guillotina.response import HTTPNotFound
 from guillotina.utils import resolve_dotted_name
-from guillotina_cms.behaviors.tiles import ITiles
 
 
 @configure.service(
     context=IContainer, method='GET',
-    permission='guillotina.ManageAddons', name='@tiles',
-    summary='Install addon to container',
-    parameters=[{
-        "name": "body",
-        "in": "body",
-        "schema": {
-            "$ref": "#/definitions/Addon"
-        }
-    }])
+    permission='guillotina.AccessContent', name='@tiles',
+    summary='Get available tiles')
 async def get_tiles(context, request):
     result = []
     for key, item in app_settings['available_tiles'].items():
@@ -37,15 +28,8 @@ async def get_tiles(context, request):
 
 @configure.service(
     context=IContainer, method='GET',
-    permission='guillotina.ManageAddons', name='@tiles/{key}',
-    summary='Install addon to container',
-    parameters=[{
-        "name": "body",
-        "in": "body",
-        "schema": {
-            "$ref": "#/definitions/Schema"
-        }
-    }])
+    permission='guillotina.AccessContent', name='@tiles/{key}',
+    summary='Get specific tile')
 async def get_tile_schema(context, request):
     key = request.matchdict['key']
     if key not in app_settings['available_tiles'].keys():
@@ -54,4 +38,3 @@ async def get_tile_schema(context, request):
     schema = resolve_dotted_name(tile['schema'])
     serializer = get_multi_adapter((schema, request), ISchemaSerializeToJson)
     return await serializer()
-
