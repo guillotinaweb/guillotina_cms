@@ -7,14 +7,6 @@ from guillotina.interfaces import IFolder
 
 @configure.behavior(title="Syndication settings", for_=IFolder)
 class ISyndicationSettings(Interface):
-    '''
-    If migrating from plone, you will want url rewrites for:
-    - RSS -> @rss
-    - rss.xml -> @rss
-    - atom.xml -> @atom
-    - itunes.xml -> @itunes
-    - feed.json -> @feed
-    '''
 
     max_items = schema.Int(
         title='Maximum items',
