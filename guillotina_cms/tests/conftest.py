@@ -3,5 +3,6 @@ pytest_plugins = [
     'guillotina.tests.fixtures',
     'guillotina_elasticsearch.tests.fixtures',
     'guillotina_rediscache.tests.fixtures',
+    'guillotina_linkintegrity.tests.fixtures',
     'guillotina_cms.tests.fixtures'
 ]

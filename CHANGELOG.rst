@@ -1,7 +1,14 @@
 1.0a6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add guillotina_linkintegrity
+  [vangheem]
+
+- Syndication settings behavior(ssr needs to provide feeds)
+  [vangheem]
+
+  - Provide image scale support
+  [vangheem]
 
 
 1.0a5 (2018-09-25)
