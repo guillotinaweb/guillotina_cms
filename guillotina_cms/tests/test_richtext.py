@@ -1,4 +1,12 @@
 import json
+import os
+
+import pytest
+
+
+pytestmark = pytest.mark.skipif(
+    os.environ.get('DATABASE') not in ('postgresql', 'cockroachdb'),
+    reason="These tests are only for postgresql")
 
 
 async def test_li(cms_requester):
