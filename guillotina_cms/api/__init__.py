@@ -4,7 +4,6 @@ from . import content  # noqa
 from . import following  # noqa
 from . import images  # noqa
 from . import indices  # noqa
-from . import login  # noqa
 from . import search  # noqa
 from . import tiles  # noqa
 from . import types  # noqa
