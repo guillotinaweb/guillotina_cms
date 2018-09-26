@@ -1,3 +1,11 @@
+from pytest_docker_fixtures import images
+
+
+images.configure(
+    'cockroach',
+    'cockroachdb/cockroach', 'v2.0.5')
+
+
 pytest_plugins = [
     'pytest_docker_fixtures',
     'guillotina.tests.fixtures',
