@@ -1,6 +1,9 @@
 1.0a11 (unreleased)
 -------------------
 
+- Be able to provide initial state when creating object
+  [vangheem]
+
 - Provide file download url in file type response
   [vangheem]
 
