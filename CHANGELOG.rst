@@ -4,6 +4,9 @@
 - Be able to provide initial state when creating object
   [vangheem]
 
+- Fix image scaling
+  [vangheem]
+
 - Provide file download url in file type response
   [vangheem]
 
