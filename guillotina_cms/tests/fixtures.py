@@ -48,7 +48,7 @@ class CMSRequester(ContainerRequesterAsyncContextManager):
 async def cms_requester(redis_container, elasticsearch, guillotina, loop):
     from guillotina import app_settings
     app_settings['redis']['port'] = redis_container[1]
-    app_settings['elasticsearch']['connection_settings']['hosts'] = [':'.join(elasticsearch)]
+    app_settings['elasticsearch']['connection_settings']['hosts'] = [':'.join(str(elasticsearch))]
     yield CMSRequester(guillotina, loop)
 
 
