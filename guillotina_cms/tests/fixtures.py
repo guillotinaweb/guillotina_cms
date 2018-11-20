@@ -32,7 +32,7 @@ class CMSRequester(ContainerRequesterAsyncContextManager):
         # aioes caches loop, we need to continue to reset it
         search = get_utility(ICatalogUtility)
         search.loop = loop
-        if search._conn:
+        if getattr(search, '_conn', None):
             search._conn.close()
         search._conn = None
 
@@ -48,7 +48,7 @@ class CMSRequester(ContainerRequesterAsyncContextManager):
 async def cms_requester(redis_container, elasticsearch, guillotina, loop):
     from guillotina import app_settings
     app_settings['redis']['port'] = redis_container[1]
-    app_settings['elasticsearch']['connection_settings']['hosts'] = [':'.join(str(elasticsearch))]
+    app_settings['elasticsearch']['connection_settings']['hosts'] = [':'.join(elasticsearch)]
     yield CMSRequester(guillotina, loop)
 
 
