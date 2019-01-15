@@ -9,9 +9,12 @@ from guillotina.utils import get_authenticated_user_id
 from guillotina.utils import get_current_request
 from guillotina_cms.interfaces import ICMSBehavior
 from guillotina_cms.interfaces import IWorkflow
+from guillotina.catalog import index
 
 
-@configure.subscriber(for_=(IResource, IObjectAddedEvent))
+@configure.subscriber(
+    for_=(IResource, IObjectAddedEvent),
+    priority=1001)  # after indexing
 async def cms_object_added(obj, event):
     cms = query_adapter(obj, ICMSBehavior)
     if cms is not None:
@@ -40,6 +43,13 @@ async def cms_object_added(obj, event):
             }
         )
         cms._p_register()
+        # at least try to start populating position
+        # we don't want to write a counter on parent
+        # since it's bad for performance to do something
+        # on parent from
+        cms.position = (await obj.__parent__.async_len()) + 1
+        fut = index.get_future()
+        fut.index[obj.uuid]['position'] = cms.position
 
     if hasattr(obj, 'title') and obj.title is None:
         obj.title = obj.id
