@@ -1,12 +1,13 @@
 import json
 
+from guillotina.db.interfaces import ICockroachStorage
 from guillotina.db.interfaces import IPostgresStorage
 from guillotina.transactions import get_transaction
 
 
 async def get_last_child_position(folder):
     txn = get_transaction()
-    if not IPostgresStorage.providedBy(txn.storage):
+    if not IPostgresStorage.providedBy(txn.storage) or ICockroachStorage.providedBy(txn.storage):
         return await folder.async_len()
     conn = await txn.get_connection()
     results = await conn.fetch('''select json from {}

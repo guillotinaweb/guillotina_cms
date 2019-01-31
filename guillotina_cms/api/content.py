@@ -1,6 +1,7 @@
 from guillotina import configure
 from guillotina.api.content import resolve_uid
 from guillotina.catalog import index
+from guillotina.db.interfaces import ICockroachStorage
 from guillotina.db.interfaces import IPostgresStorage
 from guillotina.interfaces import IAsyncContainer
 from guillotina.interfaces import IContainer
@@ -53,7 +54,7 @@ async def order_content(context, request):
 
     # verify current order matches
     txn = get_transaction()
-    if not IPostgresStorage.providedBy(txn.storage):
+    if not IPostgresStorage.providedBy(txn.storage) or ICockroachStorage.providedBy(txn.storage):
         raise HTTPBadRequest(content={
             'message': 'Content ordering not supported'
         })
@@ -72,7 +73,7 @@ limit {}'''.format(
             )
         })
 
-    results.sort(key=lambda item: item.get('pos') or 0)
+    results.sort(key=lambda item: item['pos'] or 0)
     order = [i['id'] for i in results]
 
     if len(subset_ids) > len(order):
@@ -82,7 +83,8 @@ limit {}'''.format(
     if len(subset_ids) == len(order):
         if subset_ids != order:
             raise HTTPPreconditionFailed(content={
-                'message': 'Invalid subset'
+                'message': 'Invalid subset',
+                'current': order
             })
     else:
         # verify subset
@@ -92,18 +94,20 @@ limit {}'''.format(
             end = order.index(subset_ids[-1]) + 1
         except ValueError:
             raise HTTPPreconditionFailed(content={
-                'message': 'Invalid subset'
+                'message': 'Invalid subset. Could not calculate subset match',
+
             })
         order_subset = order[start:end]
         if subset_ids != order_subset:
             raise HTTPPreconditionFailed(content={
-                'message': 'Invalid subset'
+                'message': 'Invalid subset',
+                'current': order_subset
             })
 
     if ((order.index(data['obj_id']) + delta + 1) > len(order) or (
             order.index(data['obj_id']) + delta) < 0):
         raise HTTPPreconditionFailed(content={
-            'message': 'Can not move'
+            'message': 'Can not move. Invalid move target.'
         })
     # now swap position for item
     moved = [{

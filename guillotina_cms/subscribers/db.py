@@ -1,6 +1,7 @@
 from guillotina import configure
-from guillotina.interfaces import IDatabaseInitializedEvent
+from guillotina.db.interfaces import ICockroachStorage
 from guillotina.db.interfaces import IPostgresStorage
+from guillotina.interfaces import IDatabaseInitializedEvent
 
 
 statements = [
@@ -17,7 +18,7 @@ async def db_initialized(event):
     Initialize additional pg indexes
     '''
     storage = event.database.storage
-    if not IPostgresStorage.providedBy(storage):
+    if not IPostgresStorage.providedBy(storage) or ICockroachStorage.providedBy(storage):
         return
 
     # create json data indexes
