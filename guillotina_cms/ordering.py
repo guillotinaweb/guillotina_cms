@@ -1,11 +1,13 @@
 import json
-
+from guillotina import app_settings
 from guillotina.db.interfaces import ICockroachStorage
 from guillotina.db.interfaces import IPostgresStorage
 from guillotina.transactions import get_transaction
 
 
 def supports_ordering(storage):
+    if not app_settings.get('store_json', False):
+        return False
     return IPostgresStorage.providedBy(storage) and not ICockroachStorage.providedBy(storage)
 
 
