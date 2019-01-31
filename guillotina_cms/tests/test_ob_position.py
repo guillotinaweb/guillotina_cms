@@ -35,7 +35,7 @@ async def test_get_max_position_in_folder(cms_requester):
         root = await utils.get_root(request)
         container = await root.async_get('guillotina')
         pos = await get_last_child_position(container)
-        assert pos == 1
+        assert pos > 1
 
         resp1, status = await requester('GET', '/db/guillotina/item2')
         resp2, status = await requester('GET', '/db/guillotina/item2')
