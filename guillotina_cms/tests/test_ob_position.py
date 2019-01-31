@@ -37,7 +37,7 @@ async def test_get_max_position_in_folder(cms_requester):
         pos = await get_last_child_position(container)
         assert pos > 1
 
-        resp1, status = await requester('GET', '/db/guillotina/item2')
+        resp1, status = await requester('GET', '/db/guillotina/item1')
         resp2, status = await requester('GET', '/db/guillotina/item2')
         assert (resp2[ICMSBehavior.__identifier__]['position_in_parent'] >  # noqa
                 resp1[ICMSBehavior.__identifier__]['position_in_parent'])
