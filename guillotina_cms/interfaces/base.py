@@ -47,10 +47,12 @@ class ICMSBehavior(Interface):
         source='content_layouts',
         default='default')
 
+    # not absolute positioning, just a relative positioning
+    # based on ordered numbers. It won't be numbers like 1,2,3,4,5,etc
     index_field('position_in_parent', type='int')
     position_in_parent = schema.Int(
         title='Position in parent',
-        default=0,
+        default=-1,
         required=False)
 
     index_field('review_state', type='keyword')

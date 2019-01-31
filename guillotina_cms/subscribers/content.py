@@ -1,16 +1,19 @@
 import datetime
-from guillotina_cms.utils import get_last_child_position
 
 from guillotina import configure
+from guillotina.catalog import index
 from guillotina.component import query_adapter
 from guillotina.interfaces import IObjectAddedEvent
 from guillotina.interfaces import IResource
 from guillotina.security.utils import apply_sharing
+from guillotina.transactions import get_transaction
 from guillotina.utils import get_authenticated_user_id
 from guillotina.utils import get_current_request
+
 from guillotina_cms.interfaces import ICMSBehavior
 from guillotina_cms.interfaces import IWorkflow
-from guillotina.catalog import index
+from guillotina_cms.ordering import get_next_order
+from guillotina_cms.ordering import supports_ordering
 
 
 @configure.subscriber(
@@ -44,12 +47,14 @@ async def cms_object_added(obj, event):
             }
         )
         cms._p_register()
-        pos = await get_last_child_position(obj.__parent__) + 1
-        cms.position_in_parent = pos
-        fut = index.get_future()
-        if obj.uuid not in fut.index:
-            fut.index[obj.uuid] = {}
-        fut.index[obj.uuid]['position_in_parent'] = cms.position_in_parent
+        txn = get_transaction()
+        if supports_ordering(txn.storage):
+            pos = await get_next_order()
+            cms.position_in_parent = pos
+            fut = index.get_future()
+            if obj.uuid not in fut.index:
+                fut.index[obj.uuid] = {}
+            fut.index[obj.uuid]['position_in_parent'] = cms.position_in_parent
 
     if hasattr(obj, 'title') and obj.title is None:
         obj.title = obj.id

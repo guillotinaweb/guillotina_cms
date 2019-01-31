@@ -5,6 +5,7 @@ from guillotina.interfaces import IDatabaseInitializedEvent
 
 
 statements = [
+    'CREATE SEQUENCE IF NOT EXISTS order_sequence',
     """CREATE INDEX IF NOT EXISTS objects_pos_in_parent
 ON {} (((json->>'position_in_parent')::int) DESC)""",
     """CREATE INDEX IF NOT EXISTS objects_pos_in_parent_asc

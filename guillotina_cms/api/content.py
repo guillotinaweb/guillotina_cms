@@ -41,6 +41,37 @@ async def _move(parent, child_id, delta):
     return beh.position_in_parent
 
 
+async def _swap(parent, one, two, order, mapped):
+    one_pos = mapped[one]
+    two_pos = mapped[two]
+
+    ob_one = await parent.async_get(one)
+    ob_two = await parent.async_get(two)
+
+    beh_one = await get_behavior(ob_one, ICMSBehavior)
+    beh_two = await get_behavior(ob_two, ICMSBehavior)
+
+    beh_one.position_in_parent = two_pos
+    beh_two.position_in_parent = one_pos
+
+    one_idx = order.index(one)
+    two_idx = order.index(two)
+    order[two_idx], order[one_idx] = order[one_idx], order[two_idx]
+
+    await index.index_object(ob_one, indexes=['position_in_parent'], modified=True)
+    await index.index_object(ob_two, indexes=['position_in_parent'], modified=True)
+    return {
+        one: {
+            'idx': two_idx,
+            'pos': two_pos
+        },
+        two: {
+            'idx': one_idx,
+            'pos': one_pos
+        }
+    }
+
+
 MAX_FOLDER_SORT_SIZE = 5000
 
 
@@ -74,7 +105,11 @@ limit {}'''.format(
         })
 
     results.sort(key=lambda item: item['pos'] or 0)
-    order = [i['id'] for i in results]
+    order = []
+    mapped = {}
+    for item in results:
+        order.append(item['id'])
+        mapped[item['id']] = item['pos']
 
     if len(subset_ids) > len(order):
         raise HTTPPreconditionFailed(content={
@@ -110,32 +145,22 @@ limit {}'''.format(
             'message': 'Can not move. Invalid move target.'
         })
     # now swap position for item
-    moved = [{
-        'id': data['obj_id'],
-        'position': await _move(context, data['obj_id'], delta),
-        'delta': delta
-    }]
-
+    moved_item_index = order.index(data['obj_id'])
+    moved = {}
     # over range of delta and shift position of the rest the opposite direction
     # for example:
     #  - move idx 0, delta 3
     #    - idx 1, 2, 3 are moved to 0, 1, 2
     #  - move idx 4, delta -2
     #    - idx 2, 3 are moved to 3, 4
-    moved_item_index = order.index(data['obj_id'])
-    if delta > 0:
-        start = moved_item_index + 1
-        end = start + delta
-        item_delta = -1
+    if delta < 0:
+        group = [i for i in reversed(
+            order[moved_item_index + delta:moved_item_index + 1])]
     else:
-        end = moved_item_index
-        start = end + delta
-        item_delta = 1
-    for item_id in order[start:end]:
-        moved.append({
-            'id': item_id,
-            'position': await _move(context, item_id, item_delta),
-            'delta': item_delta
-        })
+        group = order[moved_item_index:moved_item_index + delta + 1]
+
+    for item_id in group[1:]:
+        moved.update(
+            await _swap(context, data['obj_id'], item_id, order, mapped))
 
     return moved

@@ -5,7 +5,7 @@ import pytest
 from guillotina.tests import utils
 
 from guillotina_cms.interfaces import ICMSBehavior
-from guillotina_cms.utils import get_last_child_position
+from guillotina_cms.ordering import get_last_child_position
 
 
 @pytest.mark.skipif(os.environ.get('DATABASE', 'DUMMY') in ('cockroachdb', 'DUMMY'),
@@ -37,8 +37,10 @@ async def test_get_max_position_in_folder(cms_requester):
         pos = await get_last_child_position(container)
         assert pos == 1
 
-        resp, status = await requester('GET', '/db/guillotina/item2')
-        assert resp[ICMSBehavior.__identifier__]['position_in_parent'] == 1
+        resp1, status = await requester('GET', '/db/guillotina/item2')
+        resp2, status = await requester('GET', '/db/guillotina/item2')
+        assert (resp2[ICMSBehavior.__identifier__]['position_in_parent'] >  # noqa
+                resp1[ICMSBehavior.__identifier__]['position_in_parent'])
 
 
 @pytest.mark.skipif(os.environ.get('DATABASE', 'DUMMY') in ('cockroachdb', 'DUMMY'),
@@ -57,7 +59,7 @@ async def test_move_item_up(cms_requester):
             )
 
         resp, status = await requester('GET', '/db/guillotina/item9')
-        assert resp[ICMSBehavior.__identifier__]['position_in_parent'] == 9
+        assert resp[ICMSBehavior.__identifier__]['position_in_parent'] >= 9
 
         resp, status = await requester(
             'PATCH', '/db/guillotina/@order',
@@ -68,16 +70,13 @@ async def test_move_item_up(cms_requester):
             })
         )
         assert status == 200
-        assert resp[0]['position'] == 2
-        assert resp[0]['delta'] == 1
-        assert resp[1]['position'] == 1
-        assert resp[1]['id'] == 'item2'
-        assert resp[1]['delta'] == -1
+        assert resp['item1']['idx'] == 2
+        assert resp['item2']['idx'] == 1
 
-        resp, status = await requester('GET', '/db/guillotina/item1')
-        assert resp[ICMSBehavior.__identifier__]['position_in_parent'] == 2
-        resp, status = await requester('GET', '/db/guillotina/item2')
-        assert resp[ICMSBehavior.__identifier__]['position_in_parent'] == 1
+        resp1, status = await requester('GET', '/db/guillotina/item1')
+        assert resp1[ICMSBehavior.__identifier__]['position_in_parent'] == resp['item1']['pos']
+        resp2, status = await requester('GET', '/db/guillotina/item2')
+        assert resp2[ICMSBehavior.__identifier__]['position_in_parent'] == resp['item2']['pos']
 
         resp, status = await requester(
             'PATCH', '/db/guillotina/@order',
@@ -99,15 +98,10 @@ async def test_move_item_up(cms_requester):
         )
         assert status == 200
         assert len(resp) == 4
-        assert resp[0]['position'] == 3
-        assert resp[0]['delta'] == 3
-
-        assert resp[3]['position'] == 2
-        assert resp[3]['id'] == 'item3'
-        assert resp[3]['delta'] == -1
-        assert resp[2]['position'] == 1
-        assert resp[2]['id'] == 'item1'
-        assert resp[2]['delta'] == -1
+        assert resp['item0']['idx'] == 3
+        assert resp['item2']['idx'] == 0
+        assert resp['item1']['idx'] == 1
+        assert resp['item3']['idx'] == 2
 
 
 @pytest.mark.skipif(os.environ.get('DATABASE', 'DUMMY') in ('cockroachdb', 'DUMMY'),
@@ -125,8 +119,10 @@ async def test_move_item_down(cms_requester):
                 })
             )
 
-        resp, status = await requester('GET', '/db/guillotina/item9')
-        assert resp[ICMSBehavior.__identifier__]['position_in_parent'] == 9
+        resp1, status = await requester('GET', '/db/guillotina/item8')
+        resp2, status = await requester('GET', '/db/guillotina/item9')
+        assert (resp2[ICMSBehavior.__identifier__]['position_in_parent'] >  # noqa
+                resp1[ICMSBehavior.__identifier__]['position_in_parent'])
 
         resp, status = await requester(
             'PATCH', '/db/guillotina/@order',
@@ -137,16 +133,13 @@ async def test_move_item_down(cms_requester):
             })
         )
         assert status == 200
-        assert resp[0]['position'] == 1
-        assert resp[0]['delta'] == -1
-        assert resp[1]['position'] == 2
-        assert resp[1]['id'] == 'item1'
-        assert resp[1]['delta'] == 1
+        assert resp['item2']['idx'] == 1
+        assert resp['item1']['idx'] == 2
 
-        resp, status = await requester('GET', '/db/guillotina/item1')
-        assert resp[ICMSBehavior.__identifier__]['position_in_parent'] == 2
-        resp, status = await requester('GET', '/db/guillotina/item2')
-        assert resp[ICMSBehavior.__identifier__]['position_in_parent'] == 1
+        resp1, status = await requester('GET', '/db/guillotina/item1')
+        assert resp1[ICMSBehavior.__identifier__]['position_in_parent'] == resp['item1']['pos']
+        resp2, status = await requester('GET', '/db/guillotina/item2')
+        assert resp2[ICMSBehavior.__identifier__]['position_in_parent'] == resp['item2']['pos']
 
         resp, status = await requester(
             'PATCH', '/db/guillotina/@order',
@@ -168,12 +161,7 @@ async def test_move_item_down(cms_requester):
         )
         assert status == 200
         assert len(resp) == 4
-        assert resp[0]['position'] == 0
-        assert resp[0]['delta'] == -3
-
-        assert resp[1]['position'] == 1
-        assert resp[1]['id'] == 'item0'
-        assert resp[1]['delta'] == 1
-        assert resp[2]['position'] == 2
-        assert resp[2]['id'] == 'item2'
-        assert resp[2]['delta'] == 1
+        assert resp['item3']['idx'] == 0
+        assert resp['item0']['idx'] == 1
+        assert resp['item2']['idx'] == 2
+        assert resp['item1']['idx'] == 3
