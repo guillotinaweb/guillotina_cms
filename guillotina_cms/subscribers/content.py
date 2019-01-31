@@ -1,4 +1,5 @@
 import datetime
+from guillotina_cms.utils import get_last_child_position
 
 from guillotina import configure
 from guillotina.component import query_adapter
@@ -43,13 +44,12 @@ async def cms_object_added(obj, event):
             }
         )
         cms._p_register()
-        # at least try to start populating position
-        # we don't want to write a counter on parent
-        # since it's bad for performance to do something
-        # on parent from
-        cms.position = (await obj.__parent__.async_len()) + 1
+        pos = await get_last_child_position(obj.__parent__) + 1
+        cms.position_in_parent = pos
         fut = index.get_future()
-        fut.index[obj.uuid]['position'] = cms.position
+        if obj.uuid not in fut.index:
+            fut.index[obj.uuid] = {}
+        fut.index[obj.uuid]['position_in_parent'] = cms.position_in_parent
 
     if hasattr(obj, 'title') and obj.title is None:
         obj.title = obj.id
