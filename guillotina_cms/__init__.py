@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
-from guillotina.i18n import MessageFactory
-from guillotina import configure
 import glob
+
 import yaml
+from guillotina import configure
+from guillotina.catalog.utils import get_index_fields
+from guillotina.component import get_utilities_for
+from guillotina.content import IResourceFactory
+from guillotina.i18n import MessageFactory
+from guillotina.utils import get_dotted_name
+
 
 _ = MessageFactory('guillotina_cms')
 
@@ -158,3 +164,11 @@ def includeme(root):
     configure.scan('guillotina_cms.install')
     configure.scan('guillotina_cms.subscribers')
     configure.scan('guillotina_cms.tiles')
+
+    # add store true to more guillotina indexes
+    for name, utility in get_utilities_for(IResourceFactory):
+        if not get_dotted_name(utility._callable).startswith('guillotina.'):
+            continue
+        for field_name, catalog_info in get_index_fields(name).items():
+            if field_name in ('creation_date', 'modification_date', 'tags'):
+                catalog_info['store'] = True
