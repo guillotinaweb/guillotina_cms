@@ -246,6 +246,9 @@ class Parser:
 
         if 'depth' in get_params:
             get_params['depth'] = str(int(get_params['depth']) + get_content_depth(self.context))
+        else:
+            # default to a depth so we don't potentially show container
+            get_params['depth'] = str(1 + get_content_depth(self.context))
 
         if '_aggregations' in get_params:
             query['aggregations'] = {}
