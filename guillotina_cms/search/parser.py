@@ -94,6 +94,12 @@ def process_field(field, value, query):
         elif field.endswith('__eq'):
             modifier = 'eq'
             field = field.rstrip('__eq')
+        elif field.endswith('__gt'):
+            modifier = 'gt'
+            field = field.rstrip('__gt')
+        elif field.endswith('__lt'):
+            modifier = 'lt'
+            field = field.rstrip('__lt')
         elif field.endswith('__gte'):
             modifier = 'gte'
             field = field.rstrip('__gte')
@@ -163,14 +169,10 @@ def process_field(field, value, query):
                         field: value
                     }
                 })
-        elif modifier == 'gte':
+        elif modifier in ('gte', 'lte', 'gt', 'lt'):
             query['query']['bool'][match_type].append(
                 {
-                    'range': {field: {'gte': value}}})
-        elif modifier == 'lte':
-            query['query']['bool'][match_type].append(
-                {
-                    'range': {field: {'lte': value}}})
+                    'range': {field: {modifier: value}}})
         elif modifier == 'wildcard':
             query['query']['bool'][match_type].append(
                 {
@@ -244,11 +246,15 @@ class Parser:
 
         bbb_parser(get_params)
 
-        if 'depth' in get_params:
-            get_params['depth'] = str(int(get_params['depth']) + get_content_depth(self.context))
-        else:
-            # default to a depth so we don't potentially show container
-            get_params['depth'] = str(1 + get_content_depth(self.context))
+        # normalize depth
+        found = False
+        for param in get_params.keys():
+            if param == 'depth' or param.startswith('depth__'):
+                found = True
+                get_params[param] = str(int(get_params[param]) + get_content_depth(self.context))
+        if not found:
+            # default to a depth so we don't show container
+            get_params['depth__gte'] = str(1 + get_content_depth(self.context))
 
         if '_aggregations' in get_params:
             query['aggregations'] = {}
