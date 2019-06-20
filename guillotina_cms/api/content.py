@@ -1,7 +1,7 @@
 from guillotina import configure
 from guillotina.api.content import resolve_uid
 from guillotina.api.service import Service
-from guillotina.content import duplicate
+from guillotina.content import duplicate, move
 from guillotina.catalog import index
 from guillotina.interfaces import IAsyncContainer
 from guillotina.interfaces import IContainer
@@ -172,34 +172,8 @@ class OrderContent(Service):
         return moved
 
 
-@configure.service(
-    method='POST', name="@copy", context=IAsyncContainer,
-    permission='guillotina.AddContent',
-    summary='Copy data into destintation',
-    parameteres=[{
-        "name": "body",
-        "in": "body",
-        "type": "object",
-        "schema": {
-            "properties": {
-                "source": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "required": ["source"]
-    }],
-    responses={
-        "200": {
-            "description": "Successful"
-        }
-    })
-async def copy_content(context, request):
+async def _iter_copyable_content(context, request):
     policy = get_security_policy()
-
     data = await request.json()
     if 'source' not in data:
         raise HTTPPreconditionFailed(content={
@@ -210,7 +184,6 @@ async def copy_content(context, request):
     if not isinstance(source, list):
         source = [source]
 
-    results = []
     container = find_container(context)
     container_url = get_object_url(container)
     for item in source:
@@ -242,7 +215,74 @@ async def copy_content(context, request):
                 'reason': 'Invalid permission',
                 'source': item
             })
+        yield ob
+
+
+@configure.service(
+    method='POST', name="@copy", context=IAsyncContainer,
+    permission='guillotina.AddContent',
+    summary='Copy data into destintation',
+    parameteres=[{
+        "name": "body",
+        "in": "body",
+        "type": "object",
+        "schema": {
+            "properties": {
+                "source": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "required": ["source"]
+    }],
+    responses={
+        "200": {
+            "description": "Successful"
+        }
+    })
+async def copy_content(context, request):
+    results = []
+    async for ob in _iter_copyable_content(context, request):
         new_ob = await duplicate(ob, context)
+        results.append({
+            "source": get_object_url(ob),
+            "target": get_object_url(new_ob)
+        })
+    return results
+
+
+@configure.service(
+    method='POST', name="@move", context=IAsyncContainer,
+    permission='guillotina.AddContent',
+    summary='Move data into destintation',
+    parameteres=[{
+        "name": "body",
+        "in": "body",
+        "type": "object",
+        "schema": {
+            "properties": {
+                "source": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "required": ["source"]
+    }],
+    responses={
+        "200": {
+            "description": "Successful"
+        }
+    })
+async def move_content(context, request):
+    results = []
+    async for ob in _iter_copyable_content(context, request):
+        new_ob = await move(ob, context)
         results.append({
             "source": get_object_url(ob),
             "target": get_object_url(new_ob)
