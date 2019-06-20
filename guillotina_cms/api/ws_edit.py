@@ -103,7 +103,7 @@ class WSEdit(View):
         try:
             self.pubsub = get_utility(IPubSubUtility)
             self.channel_name = 'ws-field-edit-{}'.format(
-                self.context._p_oid
+                self.context.__uuid__
             )
 
             # subscribe to redis channel for this context
@@ -242,9 +242,9 @@ class WSEdit(View):
             setattr(context, field.__name__, value)
             if IAsyncBehavior.implementedBy(context.__class__):
                 # it's a behavior we're editing...
-                context.data._p_register()
+                context.data.register()
             else:
-                context._p_register()
+                context.register()
 
         await tm.commit(txn=txn)
 
