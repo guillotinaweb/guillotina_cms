@@ -11,6 +11,7 @@ databases:
 store_json: true
 applications:
 - guillotina_cms
+- guillotina_elasticsearch
 address: 8081
 static:
   favicon.png: static/favicon.png
@@ -58,7 +59,7 @@ elasticsearch:
   connection_settings:
     hosts:
     - 127.0.0.1:9200
-    sniffer_timeout: 0.5
+    sniffer_timeout: 0
   index: {}
   mapping_overrides:
     "*": {}

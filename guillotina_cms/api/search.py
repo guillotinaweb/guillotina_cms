@@ -1,9 +1,8 @@
 from guillotina import configure
 from guillotina.catalog.utils import parse_query
-from guillotina.component import query_utility
-from guillotina.interfaces import ICatalogUtility
 from guillotina.interfaces import IResource
 from guillotina.utils import find_container
+from guillotina_cms.utils import get_search_utility
 
 
 @configure.service(
@@ -19,7 +18,8 @@ from guillotina.utils import find_container
         }
     })
 async def search_get(context, request):
-    search = query_utility(ICatalogUtility)
+    query = request.query.copy()
+    search = get_search_utility(query)
     if search is None:
         return {
             '@id': request.url.human_repr(),
@@ -27,7 +27,7 @@ async def search_get(context, request):
             'items_total': 0
         }
 
-    parsed_query = parse_query(context, request.query.copy(), search)
+    parsed_query = parse_query(context, query, search)
     container = find_container(context)
     result = await search.search(container, parsed_query)
 

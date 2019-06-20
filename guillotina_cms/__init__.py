@@ -147,7 +147,7 @@ for workflow_file in glob.glob(path + '/workflows/*.yaml'):
     ident = workflow_file.split('/')[-1].rstrip('.yaml')
     app_settings['workflows'][ident] = workflow_content
 
-def includeme(root):
+def includeme(root, settings):
     configure.scan('guillotina_cms.interfaces')
     configure.scan('guillotina_cms.api')
     configure.scan('guillotina_cms.behaviors')
@@ -160,3 +160,14 @@ def includeme(root):
     configure.scan('guillotina_cms.install')
     configure.scan('guillotina_cms.subscribers')
     configure.scan('guillotina_cms.tiles')
+
+    if 'guillotina_elasticsearch' in settings.get('applications', []):
+        if 'load_utilities' not in settings:
+            settings['load_utilities'] = {}
+        from guillotina.contrib.catalog.pg import app_settings as pg_app_settings
+        settings['load_utilities']['pg_catalog'] = {
+            **pg_app_settings['load_utilities']['catalog'],
+            **{
+                'name': 'pg_catalog'
+            }
+        }

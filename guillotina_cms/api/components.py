@@ -1,14 +1,12 @@
 from guillotina import configure
 from guillotina.api.service import Service
-from guillotina.component import query_utility
 from guillotina.interfaces import IAbsoluteURL
-from guillotina.interfaces import ICatalogUtility
 from guillotina.interfaces import IContainer
 from guillotina.interfaces import IResource
 from guillotina.utils import find_container
 from guillotina.utils import get_content_depth
-from guillotina.utils import get_object_url
 from guillotina_cms.interfaces import ICMSLayer
+from guillotina_cms.utils import get_search_utility
 
 
 @configure.service(
@@ -91,7 +89,7 @@ def recursive_fill(mother_list, pending_dict):
 class Navigation(Service):
 
     async def __call__(self):
-        search = query_utility(ICatalogUtility)
+        search = get_search_utility()
         container = find_container(self.context)
         depth = get_content_depth(container)
         max_depth = None
