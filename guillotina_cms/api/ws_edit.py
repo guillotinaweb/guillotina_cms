@@ -1,6 +1,5 @@
 from aiohttp import web
 from diff_match_patch import diff_match_patch
-from guillotina import app_settings
 from guillotina import configure
 from guillotina.browser import View
 from guillotina.content import get_cached_factory
@@ -125,7 +124,7 @@ class WSEdit(View):
             try:
                 await self.pubsub.unsubscribe(self.channel_name, self.request.uid)
                 await self.ws.close()  # make sure to close socket
-            except:
+            except Exception:
                 pass
 
         logger.debug('websocket connection closed')
@@ -157,7 +156,7 @@ class WSEdit(View):
             try:
                 data = json.loads(msg.data)
                 operation = data['t']
-            except:
+            except Exception:
                 self.ws.send_str(json.dumps({
                     't': 'e',
                     'v': 'Not a valid payload'

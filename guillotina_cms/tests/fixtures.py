@@ -5,13 +5,6 @@ from guillotina import testing
 from guillotina.component import get_utility
 from guillotina.interfaces import ICatalogUtility
 from guillotina.tests.fixtures import ContainerRequesterAsyncContextManager
-from pytest_docker_fixtures import images
-
-
-images.configure(
-    'elasticsearch',
-    'docker.elastic.co/elasticsearch/elasticsearch', '6.8.0'
-)
 
 
 def base_settings_configurator(settings):
@@ -44,6 +37,5 @@ class CMSRequester(ContainerRequesterAsyncContextManager):
 
 
 @pytest.fixture(scope='function')
-async def cms_requester(elasticsearch, guillotina, loop):
-    from guillotina import app_settings
+async def cms_requester(guillotina, loop):
     yield CMSRequester(guillotina, loop)
