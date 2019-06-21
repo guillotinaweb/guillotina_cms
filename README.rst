@@ -134,3 +134,21 @@ Optional addons
 ---------------
 
 - guillotina_linkintegrity
+
+
+With Elasticsearch
+------------------
+
+By default, postgresql indexes are used for search. You can use elasticsearch
+for full text searching as well though.
+
+
+Run docker with elasticsearch::
+
+    docker-compose -f docker-compose.yaml rm -s -v redis postgres elasticsearch
+
+
+Uncomment `guillotina_elasticsearch` from applications list in config.yaml::
+
+    - guillotina_elasticsearch
+
