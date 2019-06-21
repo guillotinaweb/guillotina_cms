@@ -26,11 +26,11 @@ app_settings = {
             'factory': 'guillotina_cms.utilities.workflow.WorkflowUtility',
             'settings': {}
         },
-        'guillotina_cms.pubsub': {
-            'provides': 'guillotina_cms.interfaces.IPubSubUtility',
-            'factory': 'guillotina_cms.utilities.pubsub.PubSubUtility',
-            'settings': {}
-        }
+        # 'guillotina_cms.pubsub': {
+        #     'provides': 'guillotina_cms.interfaces.IPubSubUtility',
+        #     'factory': 'guillotina_cms.utilities.pubsub.PubSubUtility',
+        #     'settings': {}
+        # }
     },
     'layouts': {
         'guillotina.interfaces.content.IFolder': [

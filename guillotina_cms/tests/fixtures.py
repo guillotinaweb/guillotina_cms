@@ -12,6 +12,10 @@ def base_settings_configurator(settings):
         settings['applications'].append('guillotina_cms')
     else:
         settings['applications'] = ['guillotina_cms']
+    settings["load_utilities"]["catalog"] = {
+        "provides": "guillotina.interfaces.ICatalogUtility",
+        "factory": "guillotina.contrib.catalog.pg.PGSearchUtility"
+    }
 
 
 testing.configure_with(base_settings_configurator)
