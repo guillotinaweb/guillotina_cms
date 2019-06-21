@@ -44,14 +44,6 @@ class CMSRequester(ContainerRequesterAsyncContextManager):
 
 
 @pytest.fixture(scope='function')
-async def cms_requester(redis_container, elasticsearch, guillotina, loop):
+async def cms_requester(elasticsearch, guillotina, loop):
     from guillotina import app_settings
-    app_settings['redis']['port'] = redis_container[1]
-    app_settings['elasticsearch']['connection_settings']['hosts'] = ['{}:{}'.format(
-        elasticsearch[0], elasticsearch[1])]
-    yield CMSRequester(guillotina, loop)
-
-
-@pytest.fixture(scope='function')
-async def pubsub(redis_container, elasticsearch, guillotina, loop):
     yield CMSRequester(guillotina, loop)
