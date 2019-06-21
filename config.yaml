@@ -12,6 +12,7 @@ store_json: true
 applications:
 - guillotina_cms
 # - guillotina_elasticsearch
+# - guillotina_linkintegrity
 address: 8081
 static:
   favicon.png: static/favicon.png
